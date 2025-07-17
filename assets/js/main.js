@@ -30,13 +30,18 @@
       );
     });
 
-    /* slicknav mobile menu active  */
+    // slicknav mobile menu active
     $(".mobile-menu").slicknav({
       prependTo: ".navbar-header",
       parentTag: "liner",
       allowParentLinks: true,
       duplicate: true,
       label: "",
+    });
+
+    // Fermer le menu SlickNav après clic sur un lien
+    $(document).on("click", ".slicknav_nav a", function () {
+      $(".slicknav_btn").trigger("click");
     });
 
     /* WOW Scroll Spy

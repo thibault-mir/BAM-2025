@@ -155,6 +155,10 @@
 
 /* mobile or only mobile */
 @media (max-width: 767px) {
+  .carousel-item img {
+    height: 65vh;
+    object-fit: cover;
+  }
   .section-title {
     font-size: 22px;
   }
@@ -250,6 +254,36 @@
   }
   .padding-none:nth-child(5) {
     border-bottom: 1px solid #ddd;
+  }
+  .schedule .schedule-tab-title .nav-tabs {
+    display: block;
+    width: 100%;
+  }
+
+  .schedule .schedule-tab-title .nav-tabs .nav-item {
+    display: block;
+    width: 100%;
+  }
+
+  .schedule .schedule-tab-title .nav-tabs .nav-link {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #eee;
+  }
+
+  .schedule .schedule-tab-title .nav-tabs .nav-link .item-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6%;
+  }
+
+  .schedule .schedule-tab-title .nav-tabs .nav-link h4,
+  .schedule .schedule-tab-title .nav-tabs .nav-link h5 {
+    margin: 0;
+    font-size: 16px;
   }
 }
 
