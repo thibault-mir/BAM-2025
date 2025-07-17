@@ -1076,6 +1076,11 @@ a.back-to-top:focus {
   background: #f3f4f3;
 }
 
+.noteamselect {
+  border: none;
+  background: #fff;
+  padding: 35px 35px;
+}
 .schedule .card-header {
   border: none;
   cursor: pointer;

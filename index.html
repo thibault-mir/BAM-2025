@@ -457,7 +457,7 @@
               <div class="form-group">
                 <!-- <label for="teamFilter">Select your team:</label> -->
                 <select id="teamFilter" class="form-control">
-                  <option value="">Select your team</option>
+                  <option value="teamselect">Select your team</option>
                   <option value="hosp_nl">Hosp - NL</option>
                   <option value="hosp_fr">Hosp - FR</option>
                   <option value="ph_nl">Pharma - NL</option>
@@ -565,6 +565,299 @@
                 aria-labelledby="monday-tab"
               >
                 <div id="accordion">
+                  <div class="card" data-group="teamselect">
+                    <div id="headingMondayNoSolect">
+                      <div
+                        class="collapsed noteamselect"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        
+                        <p style="font-size: 20px;">⚠️ Select your team first !</p>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingMondayOne">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseMonday"
+                        data-target="#collapseMondayOne"
+                        aria-expanded="false"
+                        aria-controls="collapseMondayOne"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">10:00 - 12:30</span>
+                        <h4>Arrival Participants</h4>
+                        <h5 class="name"><span style="color:#e48273">Accueil</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingMondayTwo">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseMonday"
+                        data-target="#collapseMondayTwo"
+                        aria-expanded="false"
+                        aria-controls="collapseMondayTwo"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">12:30 - 14:00</span>
+                        <h4>Lunch Time</h4>
+                        <h5 class="name"><span style="color:#e48273">Restaurant</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingMondayThree">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapse"
+                        data-target="#collapseMondayThree"
+                        aria-expanded="false"
+                        aria-controls="collapseMondayThree"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">14:00 - 15:45</span>
+                        <h4>Plenairy Session</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                    <div
+                      id="collapseMondayThree"
+                      class="collapse"
+                      aria-labelledby="headingMondayThree"
+                      data-parent="#accordion"
+                    >
+                      <div class="card-body">
+                        <p>
+                          Bart, Ziad, Marijke, vicky & Francois
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingMondayFour">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseMonday"
+                        data-target="#collapseMondayFour"
+                        aria-expanded="false"
+                        aria-controls="collapseMondayFour"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">15:45 - 16:00</span>
+                        <h4>Break Time</h4>
+                        <h5 class="name">Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl ph_nl sb_nl eu_nl">
+                    <div id="headingMondayFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseMonday"
+                        data-target="#collapseMondayFive"
+                        aria-expanded="false"
+                        aria-controls="collapseMondayFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>HTA</h4>
+                        <h5 class="name"><span style="color:#e48273">Bogey</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_fr ph_fr sb_fr eu_fr lux">
+                    <div id="headingMondayFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseMonday"
+                        data-target="#collapseMondayFive"
+                        aria-expanded="false"
+                        aria-controls="collapseMondayFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>METABO</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- MONDAY Schedule Section End -->
+
+
+              <!-- TUESDAY Schedule Section -->
+              <div
+                class="tab-pane fade"
+                id="tuesday"
+                role="tabpanel"
+                aria-labelledby="tuesday-tab"
+              >
+                <div id="accordion2">
+                  <div class="card" data-group="teamselect">
+                    <div id="headingTuesdayNoSelect">
+                      <div
+                        class="collapsed noteamselect"
+                        data-toggle="collapseTuesday"
+                        data-target="#collapseTuesdayFive"
+                        aria-expanded="false"
+                        aria-controls="collapseTuesdayFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        
+                        <p style="font-size: 20px;">⚠️ Select your team first !</p>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingTuesdayOne">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseTuesday"
+                        data-target="#collapseTuesdayOne"
+                        aria-expanded="false"
+                        aria-controls="collapseTuesdayOne"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">10:00 - 12:30</span>
+                        <h4>Arrival Participants</h4>
+                        <h5 class="name"><span style="color:#e48273">Accueil</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingTuesdayTwo">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseTuesday"
+                        data-target="#collapseTuesdayTwo"
+                        aria-expanded="false"
+                        aria-controls="collapseTuesdayTwo"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">12:30 - 14:00</span>
+                        <h4>Lunch Time</h4>
+                        <h5 class="name"><span style="color:#e48273">Restaurant</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingTuesdayThree">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseTuesday"
+                        data-target="#collapseTuesdayThree"
+                        aria-expanded="false"
+                        aria-controls="collapseTuesdayThree"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">14:00 - 15:45</span>
+                        <h4>Plenairy Session</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingTuesdayFour">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseTuesday"
+                        data-target="#collapseTuesdayFour"
+                        aria-expanded="false"
+                        aria-controls="collapseTuesdayFour"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">15:45 - 16:00</span>
+                        <h4>Break Time</h4>
+                        <h5 class="name">Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl ph_nl sb_nl eu_nl">
+                    <div id="headingTuesdayFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseTuesday"
+                        data-target="#collapseTuesdayFive"
+                        aria-expanded="false"
+                        aria-controls="collapseTuesdayFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>HTA</h4>
+                        <h5 class="name"><span style="color:#e48273">Bogey</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_fr ph_fr sb_fr eu_fr lux">
+                    <div id="headingTuesdayFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapseTuesday"
+                        data-target="#collapseTuesdayFive"
+                        aria-expanded="false"
+                        aria-controls="collapseTuesdayFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>METABO</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- TUESDAY Schedule Section End -->
+
+
+              <!-- WEDNESDAY Schedule Section -->
+              <div
+                class="tab-pane fade"
+                id="wednesday"
+                role="tabpanel"
+                aria-labelledby="wednesday-tab"
+              >
+                <div id="accordion3">
+                  <div class="card" data-group="teamselect">
+                    <div id="headingFive">
+                      <div
+                        class="collapsed noteamselect"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        
+                        <p style="font-size: 20px;">⚠️ Select your team first !</p>
+                        
+                      </div>
+                    </div>
+                  </div>
                   <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
                     <div id="headingOne">
                       <div
@@ -681,232 +974,6 @@
                   </div>
                 </div>
               </div>
-              <!-- MONDAY Schedule Section End -->
-
-
-              <!-- TUESDAY Schedule Section -->
-              <div
-                class="tab-pane fade"
-                id="tuesday"
-                role="tabpanel"
-                aria-labelledby="tuesday-tab"
-              >
-                <div id="accordion2">
-                  <div class="card">
-                    <div id="headingOne1">
-                      <div
-                        class="collapsed card-header"
-                        data-toggle="collapse"
-                        data-target="#collapseOne1"
-                        aria-expanded="false"
-                        aria-controls="collapseOne1"
-                      >
-                        <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-1.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseOne1"
-                      class="collapse show"
-                      aria-labelledby="headingOne1"
-                      data-parent="#accordion2"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card">
-                    <div id="headingTwo2">
-                      <div
-                        class="collapsed card-header"
-                        data-toggle="collapse"
-                        data-target="#collapseTwo2"
-                        aria-expanded="false"
-                        aria-controls="collapseTwo2"
-                      >
-                        <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-2.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseTwo2"
-                      class="collapse"
-                      aria-labelledby="headingTwo2"
-                      data-parent="#accordion2"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- TUESDAY Schedule Section End -->
-
-
-              <!-- WEDNESDAY Schedule Section -->
-              <div
-                class="tab-pane fade"
-                id="wednesday"
-                role="tabpanel"
-                aria-labelledby="wednesday-tab"
-              >
-                <div id="accordion3">
-                  <div class="card">
-                    <div id="headingOne3">
-                      <div
-                        class="collapsed card-header"
-                        data-toggle="collapse"
-                        data-target="#collapseOne3"
-                        aria-expanded="false"
-                        aria-controls="collapseOne3"
-                      >
-                        <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-1.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseOne3"
-                      class="collapse show"
-                      aria-labelledby="headingOne3"
-                      data-parent="#accordion3"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card">
-                    <div id="headingTwo3">
-                      <div
-                        class="collapsed card-header"
-                        data-toggle="collapse"
-                        data-target="#collapseTwo3"
-                        aria-expanded="false"
-                        aria-controls="collapseTwo3"
-                      >
-                        <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-2.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseTwo3"
-                      class="collapse"
-                      aria-labelledby="headingTwo3"
-                      data-parent="#accordion3"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card">
-                    <div id="headingThree3">
-                      <div
-                        class="collapsed card-header"
-                        data-toggle="collapse"
-                        data-target="#collapseThree3"
-                        aria-expanded="false"
-                        aria-controls="collapseThree3"
-                      >
-                        <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-3.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseThree3"
-                      class="collapse"
-                      aria-labelledby="headingThree3"
-                      data-parent="#accordion3"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <!-- WEDNESDAY Schedule Section End -->
 
 
@@ -918,123 +985,134 @@
                 aria-labelledby="thursday-tab"
               >
                 <div id="accordion4">
-                  <div class="card">
+                  <div class="card" data-group="teamselect">
+                    <div id="headingFive">
+                      <div
+                        class="collapsed noteamselect"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        
+                        <p style="font-size: 20px;">⚠️ Select your team first !</p>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
                     <div id="headingOne">
                       <div
                         class="collapsed card-header"
                         data-toggle="collapse"
-                        data-target="#collapseOne4"
+                        data-target="#collapseOne"
                         aria-expanded="false"
-                        aria-controls="collapseOne4"
+                        aria-controls="collapseOne"
                       >
                         <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-1.jpg"
-                            alt=""
-                          />
                         </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseOne4"
-                      class="collapse show"
-                      aria-labelledby="headingOne"
-                      data-parent="#accordion4"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
+                        <span class="time">10:00 - 12:30</span>
+                        <h4>Arrival Participants</h4>
+                        <h5 class="name"><span style="color:#e48273">Accueil</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                   </div>
-                  <div class="card">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
                     <div id="headingTwo">
                       <div
                         class="collapsed card-header"
                         data-toggle="collapse"
-                        data-target="#collapseTwo4"
+                        data-target="#collapseTwo"
                         aria-expanded="false"
-                        aria-controls="collapseTwo4"
+                        aria-controls="collapseTwo"
                       >
                         <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-2.jpg"
-                            alt=""
-                          />
                         </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseTwo4"
-                      class="collapse"
-                      aria-labelledby="headingTwo"
-                      data-parent="#accordion4"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
+                        <span class="time">12:30 - 14:00</span>
+                        <h4>Lunch Time</h4>
+                        <h5 class="name"><span style="color:#e48273">Restaurant</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                   </div>
-                  <div class="card">
-                    <div id="headingThree4">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingThree">
                       <div
                         class="collapsed card-header"
                         data-toggle="collapse"
-                        data-target="#collapseThree4"
+                        data-target="#collapseThree"
                         aria-expanded="false"
-                        aria-controls="collapseThree4"
+                        aria-controls="collapseThree"
                       >
                         <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-3.jpg"
-                            alt=""
-                          />
                         </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
+                        <span class="time">14:00 - 15:45</span>
+                        <h4>Plenairy Session</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                     <div
-                      id="collapseThree4"
+                      id="collapseThree"
                       class="collapse"
                       aria-labelledby="headingThree"
-                      data-parent="#accordion4"
+                      data-parent="#accordion"
                     >
                       <div class="card-body">
                         <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
+                          Bart, Ziad, Marijke, vicky & Francois
                         </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingFour">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapse"
+                        data-target="#collapseFour"
+                        aria-expanded="false"
+                        aria-controls="collapseFour"
+                      >
+                        <div class="images-box">
                         </div>
+                        <span class="time">15:45 - 16:00</span>
+                        <h4>Break Time</h4>
+                        <h5 class="name">Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl ph_nl sb_nl eu_nl">
+                    <div id="headingFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>HTA</h4>
+                        <h5 class="name"><span style="color:#e48273">Bogey</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_fr ph_fr sb_fr eu_fr lux">
+                    <div id="headingFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>METABO</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                   </div>
@@ -1050,8 +1128,25 @@
                 role="tabpanel"
                 aria-labelledby="friday-tab"
               >
-                <div id="accordion">
-                  <div class="card">
+                <div id="accordion5">
+                  <div class="card" data-group="teamselect">
+                    <div id="headingFive">
+                      <div
+                        class="collapsed noteamselect"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        
+                        <p style="font-size: 20px;">⚠️ Select your team first !</p>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
                     <div id="headingOne">
                       <div
                         class="collapsed card-header"
@@ -1061,37 +1156,14 @@
                         aria-controls="collapseOne"
                       >
                         <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-1.jpg"
-                            alt=""
-                          />
                         </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseOne"
-                      class="collapse show"
-                      aria-labelledby="headingOne"
-                      data-parent="#accordion"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
+                        <span class="time">10:00 - 12:30</span>
+                        <h4>Arrival Participants</h4>
+                        <h5 class="name"><span style="color:#e48273">Accueil</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                   </div>
-                  <div class="card">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
                     <div id="headingTwo">
                       <div
                         class="collapsed card-header"
@@ -1101,37 +1173,14 @@
                         aria-controls="collapseTwo"
                       >
                         <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-2.jpg"
-                            alt=""
-                          />
                         </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
-                      </div>
-                    </div>
-                    <div
-                      id="collapseTwo"
-                      class="collapse"
-                      aria-labelledby="headingTwo"
-                      data-parent="#accordion"
-                    >
-                      <div class="card-body">
-                        <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
-                        </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
-                        </div>
+                        <span class="time">12:30 - 14:00</span>
+                        <h4>Lunch Time</h4>
+                        <h5 class="name"><span style="color:#e48273">Restaurant</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                   </div>
-                  <div class="card">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
                     <div id="headingThree">
                       <div
                         class="collapsed card-header"
@@ -1141,15 +1190,10 @@
                         aria-controls="collapseThree"
                       >
                         <div class="images-box">
-                          <img
-                            class="img-fluid"
-                            src="assets/img/speaker/speakers-3.jpg"
-                            alt=""
-                          />
                         </div>
-                        <span class="time">10am - 12:30pm</span>
-                        <h4>Web Design Principles and Best Practices</h4>
-                        <h5 class="name">David Warner</h5>
+                        <span class="time">14:00 - 15:45</span>
+                        <h4>Plenairy Session</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                     <div
@@ -1160,14 +1204,59 @@
                     >
                       <div class="card-body">
                         <p>
-                          Consectetur adipisicing elit. Quod distinctio impedit
-                          sint accusantium ducimus lites consequuntur innobisl
-                          dolores saepe.Proin sit amet turpis lobortis.
+                          Bart, Ziad, Marijke, vicky & Francois
                         </p>
-                        <div class="location">
-                          <span>Location:</span> Hall 1 , Building A, Golden
-                          Street, Southafrica
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt">
+                    <div id="headingFour">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapse"
+                        data-target="#collapseFour"
+                        aria-expanded="false"
+                        aria-controls="collapseFour"
+                      >
+                        <div class="images-box">
                         </div>
+                        <span class="time">15:45 - 16:00</span>
+                        <h4>Break Time</h4>
+                        <h5 class="name">Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_nl ph_nl sb_nl eu_nl">
+                    <div id="headingFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>HTA</h4>
+                        <h5 class="name"><span style="color:#e48273">Bogey</span> - Hotel Le Gray d'Albion</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" data-group="hosp_fr ph_fr sb_fr eu_fr lux">
+                    <div id="headingFive">
+                      <div
+                        class="collapsed card-header"
+                        data-toggle="collapse"
+                        data-target="#collapseFive"
+                        aria-expanded="false"
+                        aria-controls="collapseFive"
+                      >
+                        <div class="images-box">
+                        </div>
+                        <span class="time">16:00 - 17:30</span>
+                        <h4>METABO</h4>
+                        <h5 class="name"><span style="color:#e48273">Longshot</span> - Hotel Le Gray d'Albion</h5>
                       </div>
                     </div>
                   </div>
@@ -1707,41 +1796,44 @@
     <script src="assets/js/nivo-lightbox.js"></script>
     <script src="assets/js/main.js"></script>
 
+  
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const select = document.getElementById("teamFilter");
-        const tabContent = document.getElementById("myTabContent");
 
         function filterCards() {
           const selectedGroup = select.value;
-          const activePane = tabContent.querySelector(".tab-pane.active");
+          const tabPanes = document.querySelectorAll(".tab-pane");
 
-          if (!activePane) return;
-
-          const cards = activePane.querySelectorAll(".card");
-          cards.forEach((card) => {
-            const groups = card.getAttribute("data-group")?.split(" ") || [];
-            if (!selectedGroup || groups.includes(selectedGroup)) {
-              card.style.display = "";
-            } else {
-              card.style.display = "none";
-            }
+          tabPanes.forEach((pane) => {
+            const cards = pane.querySelectorAll(".card");
+            cards.forEach((card) => {
+              const groups = (card.getAttribute("data-group") || "").split(" ");
+              if (selectedGroup === "teamselect") {
+                // Si rien n'est sélectionné, ne montrer que les cartes "⚠️ Select your team"
+                card.style.display = groups.includes("teamselect") ? "" : "none";
+              } else {
+                card.style.display = groups.includes(selectedGroup) ? "" : "none";
+              }
+            });
           });
         }
 
-
         select.addEventListener("change", filterCards);
 
-        // Also filter when switching tabs
-        const tabs = document.querySelectorAll("#myTab .nav-link");
+        // Re-filtre à chaque changement d’onglet
+        const tabs = document.querySelectorAll('#myTab a[data-toggle="tab"]');
         tabs.forEach((tab) => {
           tab.addEventListener("shown.bs.tab", filterCards);
         });
 
-        // Initial call
+        // Appel initial
         filterCards();
       });
     </script>
+
+
 
   </body>
 </html>
