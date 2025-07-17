@@ -843,11 +843,12 @@ a.back-to-top:focus {
   }
   .navbar-brand {
     position: absolute;
-    padding: 15px 15px;
+    padding: 7px 15px;
     top: 0;
+    max-width: 219px;
   }
   .navbar-brand img {
-    width: 40%;
+    width: 100%;
   }
   #mobile-menu {
     display: none;

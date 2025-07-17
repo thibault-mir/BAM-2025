@@ -18,7 +18,7 @@
     /* ==========================================================================
        countdown timer
        ========================================================================== */
-    jQuery("#clock").countdown("2025/09/22 10:00:00", function (event) {
+    jQuery("#clock").countdown("2025/09/22 10:00", function (event) {
       var $this = jQuery(this).html(
         event.strftime(
           "" +
