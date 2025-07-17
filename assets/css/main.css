@@ -2239,3 +2239,25 @@ a.back-to-top:focus {
   color: #fff;
   border-color: #fff;
 }
+
+.teams-icon {
+  font-size: 20px;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  background: #ea5c47;
+  display: block;
+  border-radius: 4px;
+  line-height: 36px;
+  transition: all 0.3s ease-in-out 0s;
+  -moz-transition: all 0.3s ease-in-out 0s;
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  -o-transition: all 0.3s ease-in-out 0s;
+}
+
+.teams-icon img {
+  width: 23px;
+  height: 23px;
+  margin-bottom: 7px;
+  margin-right: 2px;
+}
