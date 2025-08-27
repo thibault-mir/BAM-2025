@@ -2309,3 +2309,35 @@ a.back-to-top:focus {
     opacity: 1;
   }
 }
+
+#toast-container {
+  position: fixed;
+  left: 50%;
+  top: calc(16px + env(safe-area-inset-top)); /* haut de page + notch iOS */
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column; /* les toasts s’empilent vers le bas */
+  gap: 8px;
+  z-index: 10000;
+  pointer-events: none; /* ne bloque pas les clics sous-jacents */
+}
+.toast {
+  background: #111;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(-8px); /* départ vers le haut */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: auto; /* permet de copier/cliquer sur le toast si besoin */
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.toast.hide {
+  opacity: 0;
+  transform: translateY(-8px);
+}

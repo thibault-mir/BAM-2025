@@ -2530,6 +2530,8 @@
       </div>
     </div>
 
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="assets/js/jquery-min.js"></script>
     <script src="assets/js/popper.min.js"></script>
@@ -2638,8 +2640,35 @@
         });
 
         phoneNumberEl.addEventListener('click', async () => {
-          try { await navigator.clipboard.writeText(phoneNumberEl.textContent.trim()); } catch {}
+          try {
+            await navigator.clipboard.writeText(phoneNumberEl.textContent.trim());
+            showToast('Numéro copié ✅');
+          } catch {
+            showToast('Impossible de copier', 2000);
+          }
         });
+
+
+        function showToast(message, duration = 3000){
+          const root = document.getElementById('toast-container');
+          if(!root) return;
+
+          const t = document.createElement('div');
+          t.className = 'toast';
+          t.setAttribute('role','status');
+          t.textContent = message;
+
+          root.appendChild(t);
+          // entrée
+          requestAnimationFrame(() => t.classList.add('show'));
+
+          // sortie
+          setTimeout(() => {
+            t.classList.remove('show');
+            t.classList.add('hide');
+            setTimeout(() => t.remove(), 220);
+          }, duration);
+        }
 
         /* =======================
         *  FILTRE + TABS
