@@ -198,6 +198,60 @@
           <span class="sr-only">Next</span>
         </a>
       </div>
+
+      <style>
+        /* On autorise le scroll vertical pendant un swipe horizontal */
+        #main-slide { touch-action: pan-y; }
+      </style>
+
+      <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('main-slide');
+        if (!el) return;
+
+        let startX = 0, startY = 0, dx = 0, dy = 0, t0 = 0, moving = false;
+        const THRESHOLD = 50;   // distance min (px) pour valider un swipe
+        const RESTRAINT = 40;   // tolérance verticale
+        const TIME = 800;       // temps max (ms)
+
+        function goNext() {
+          if (window.jQuery && typeof jQuery(el).carousel === 'function') {
+            jQuery(el).carousel('next');   // Bootstrap 4
+          } else {
+            el.querySelector('.carousel-control-next')?.click(); // fallback
+          }
+        }
+        function goPrev() {
+          if (window.jQuery && typeof jQuery(el).carousel === 'function') {
+            jQuery(el).carousel('prev');
+          } else {
+            el.querySelector('.carousel-control-prev')?.click();
+          }
+        }
+
+        function onStart(x, y) { startX = x; startY = y; dx = dy = 0; t0 = Date.now(); moving = true; }
+        function onMove(x, y) { if (!moving) return; dx = x - startX; dy = y - startY; }
+        function onEnd() {
+          if (!moving) return;
+          const dt = Date.now() - t0;
+          if (Math.abs(dx) > THRESHOLD && Math.abs(dy) < RESTRAINT && dt < TIME) {
+            dx < 0 ? goNext() : goPrev();
+          }
+          moving = false;
+        }
+
+        // Touch events (iOS/Android)
+        el.addEventListener('touchstart', e => onStart(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+        el.addEventListener('touchmove',  e => onMove(e.touches[0].clientX, e.touches[0].clientY),   { passive: true });
+        el.addEventListener('touchend',   onEnd, { passive: true });
+
+        // (Optionnel) Pointer events pour certains navigateurs
+        el.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') onStart(e.clientX, e.clientY); });
+        el.addEventListener('pointermove',  e => { if (e.pointerType === 'touch') onMove(e.clientX, e.clientY); });
+        el.addEventListener('pointerup',    e => { if (e.pointerType === 'touch') onEnd(); });
+      });
+      </script>
+
       <!-- Main Carousel Section End -->
     </header>
     <!-- Header Area wrapper End -->
