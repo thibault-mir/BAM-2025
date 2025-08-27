@@ -2322,8 +2322,8 @@ a.back-to-top:focus {
   pointer-events: none; /* ne bloque pas les clics sous-jacents */
 }
 .toast {
-  background: #111;
-  color: #fff;
+  color: #111;
+  background: #fff;
   padding: 8px 12px;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);

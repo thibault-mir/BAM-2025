@@ -41,6 +41,15 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#0ea5e9">
+
+    <!-- iOS (ajoute aussi une icône 180x180) -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   </head>
   <body>
     <!-- Header Area wrapper Starts -->
@@ -2446,6 +2455,7 @@
     <!-- Modale -->
     <div id="phoneModal" class="modal" aria-hidden="true" role="dialog" aria-label="Numéro de téléphone">
       <div class="modal-content" role="document" tabindex="-1">
+        <p>Cliquez sur le numéro pour le copier</p>
         <p id="phoneNumber" class="phone-number"></p>
       </div>
     </div>
@@ -2531,6 +2541,15 @@
     </div>
 
     <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+    </script>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="assets/js/jquery-min.js"></script>
