@@ -2267,3 +2267,45 @@ a.back-to-top:focus {
   margin-bottom: 7px;
   margin-right: 2px;
 }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45); /* fond grisé */
+  z-index: 9999;
+}
+.modal.is-open {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  min-width: 250px;
+  max-width: 13vw;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: pop 0.15s ease-out;
+  outline: none;
+}
+.phone-number {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

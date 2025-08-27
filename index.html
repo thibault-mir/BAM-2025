@@ -357,11 +357,11 @@
               <div class="form-group">
                 <!-- <label for="teamFilter">Select your team:</label> -->
                 <select id="teamFilter" class="form-control">
-                  <option value="teamselect">Select your team</option>
-                  <option value="hosp_nl">Hosp - NL</option>
-                  <option value="hosp_fr">Hosp - FR</option>
-                  <option value="ph_nl">Pharma - NL</option>
-                  <option value="ph_fr">Pharma - FR</option>
+                  <!-- <option value="teamselect">Select your team</option>
+                  <option value="hosp_nl">HOSP - NL</option>
+                  <option value="hosp_fr">HOSP - FR</option>
+                  <option value="ph_nl">PHARMA - NL</option>
+                  <option value="ph_fr">PHARMA - FR</option>
                   <option value="sb_nl">GP SB - NL</option>
                   <option value="sb_fr">GP SB - FR</option>
                   <option value="eu_nl">GP EU - NL</option>
@@ -370,9 +370,49 @@
                   <option value="onco_gi">ONCO - GI</option>
                   <option value="onco_hemato">ONCO - Hemato</option>
                   <option value="mkt">MKT</option>
-                  <option value="maf_cmvd">Med Aff - CMVD</option>
-                  <option value="maf_onco">Med Aff - ONCO</option>
-                  <option value="int">INTERNAL TEAM</option>
+                  <option value="maf_cmvd">MED AFF - CMVD</option>
+                  <option value="maf_onco">MED AFF - ONCO GI</option>
+                  <option value="maf_oncohemato">MED AFF - ONCO Hemato</option>
+                  <option value="int">INTERNAL TEAM</option> -->
+
+                  <option value="teamselect" selected disabled>— Select your team —</option>
+
+                  <optgroup label="HOSP">
+                    <option value="hosp_nl">HOSP - NL</option>
+                    <option value="hosp_fr">HOSP - FR</option>
+                  </optgroup>
+
+                  <optgroup label="PHARMA">
+                    <option value="ph_nl">PHARMA - NL</option>
+                    <option value="ph_fr">PHARMA - FR</option>
+                  </optgroup>
+
+                  <optgroup label="GP SB">
+                    <option value="sb_nl">GP SB - NL</option>
+                    <option value="sb_fr">GP SB - FR</option>
+                  </optgroup>
+
+                  <optgroup label="GP EU">
+                    <option value="eu_nl">GP EU - NL</option>
+                    <option value="eu_fr">GP EU - FR</option>
+                  </optgroup>
+
+                  <optgroup label="Oncology">
+                    <option value="onco_gi">ONCO - GI</option>
+                    <option value="onco_hemato">ONCO - Hemato</option>
+                  </optgroup>
+
+                  <optgroup label="Medical Affairs">
+                    <option value="maf_cmvd">MED AFF - CMVD</option>
+                    <option value="maf_onco">MED AFF - ONCO GI</option>
+                    <option value="maf_oncohemato">MED AFF - ONCO Hemato</option>
+                  </optgroup>
+
+                  <optgroup label="Other">
+                    <option value="lux">LUX</option>
+                    <option value="mkt">MKT</option>
+                    <option value="int">INTERNAL TEAM</option>
+                  </optgroup>
                 </select>
               </div>
               <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -504,7 +544,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux mkt maf onco_gi onco_hemato">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayAirportOne">
                       <div
                         class="collapsed card-header"
@@ -521,7 +561,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayOne">
                       <div
                         class="collapsed card-header"
@@ -538,7 +578,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayTwo">
                       <div
                         class="collapsed card-header"
@@ -555,7 +595,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayThree">
                       <div
                         class="collapsed card-header"
@@ -585,7 +625,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayFour">
                       <div
                         class="collapsed card-header"
@@ -602,7 +642,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayThree">
                       <div
                         class="collapsed card-header"
@@ -619,7 +659,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayThree">
                       <div
                         class="collapsed card-header"
@@ -636,7 +676,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayThree">
                       <div
                         class="collapsed card-header"
@@ -653,7 +693,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf">
+                  <div class="card" data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr lux onco_gi onco_hemato mkt maf_cmvd maf_onco maf_oncohemato">
                     <div id="headingMondayDinner">
                       <div
                         class="collapsed card-header"
@@ -2269,15 +2309,26 @@
                           <img src="assets/img/logo-teams.png" alt="Teams" />
                         </a>
                       </li>
-                      </li>
                       <li>
                         <a
                           href="mailto:angela.dasilva@servier.com"
                           class="teams-icon">
-                          <img src="assets/img/logo-mail.png" alt="Teams" />
+                          <img src="assets/img/logo-mail.png" alt="Mail" />
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#call"
+                          class="teams-icon"
+                          data-phone="+32473692419"
+                          aria-haspopup="dialog"
+                          aria-controls="phoneModal">
+                          <img src="assets/img/logo-tel.png" alt="Téléphone" />
                         </a>
                       </li>
                     </ul>
+
+                    
                   </div>
                 </div>
               </div>
@@ -2287,6 +2338,7 @@
             </div>
             <!-- Team Item Ends -->
           </div>
+
           <div class="col-sm-6 col-md-6 col-lg-4">
             <!-- Team Item Starts -->
             <div class="team-item wow fadeInUp" data-wow-delay="0.4s">
@@ -2307,12 +2359,21 @@
                           <img src="assets/img/logo-teams.png" alt="Teams" />
                         </a>
                       </li>
-                      </li>
                       <li>
                         <a
                           href="mailto:nathalie.parent@servier.com"
                           class="teams-icon">
                           <img src="assets/img/logo-mail.png" alt="Teams" />
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#call"
+                          class="teams-icon"
+                          data-phone="+32476686243"
+                          aria-haspopup="dialog"
+                          aria-controls="phoneModal">
+                          <img src="assets/img/logo-tel.png" alt="Téléphone" />
                         </a>
                       </li>
                     </ul>
@@ -2346,12 +2407,21 @@
                           <img src="assets/img/logo-teams.png" alt="Teams" />
                         </a>
                       </li>
-                      </li>
                       <li>
                         <a
                           href="mailto:cindy.waterplas@servier.com"
                           class="teams-icon">
                           <img src="assets/img/logo-mail.png" alt="Teams" />
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#call"
+                          class="teams-icon"
+                          data-phone="+32474550670"
+                          aria-haspopup="dialog"
+                          aria-controls="phoneModal">
+                          <img src="assets/img/logo-tel.png" alt="Téléphone" />
                         </a>
                       </li>
                     </ul>
@@ -2366,8 +2436,20 @@
           </div>
         </div>
       </div>
+
+
+       
+
     </section>
     <!-- Contact Us Section End -->
+
+    <!-- Modale -->
+    <div id="phoneModal" class="modal" aria-hidden="true" role="dialog" aria-label="Numéro de téléphone">
+      <div class="modal-content" role="document" tabindex="-1">
+        <p id="phoneNumber" class="phone-number"></p>
+      </div>
+    </div>
+    <!-- Modale -->
 
     <!-- Footer Section Start -->
     <footer class="footer-area section-padding">
@@ -2465,8 +2547,7 @@
     </script>
     <script defer src="/_vercel/insights/script.js?v=1"></script>
 
-
-    <script>
+    <!-- <script>
       document.addEventListener("DOMContentLoaded", function () {
         const select = document.getElementById("teamFilter");
 
@@ -2518,7 +2599,98 @@
 
         filterCards(); // appel initial
       });
+    </script> -->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        /* =======================
+        *  MODALE TÉLÉPHONE
+        * ======================= */
+        const modal = document.getElementById('phoneModal');
+        const phoneNumberEl = document.getElementById('phoneNumber');
+        const phoneLinks = document.querySelectorAll('a[data-phone]');
+
+        function openModal(number) {
+          phoneNumberEl.textContent = number || '';
+          modal.classList.add('is-open');
+          modal.setAttribute('aria-hidden', 'false');
+          modal.querySelector('.modal-content')?.focus();
+        }
+        function closeModal() {
+          modal.classList.remove('is-open');
+          modal.setAttribute('aria-hidden', 'true');
+        }
+
+        // Ouvrir (click + touch, capture pour devancer iOS)
+        phoneLinks.forEach(a => {
+          const num = a.getAttribute('data-phone') || '';
+          const handler = (e) => { e.preventDefault(); e.stopImmediatePropagation(); openModal(num); };
+          a.addEventListener('click', handler, { capture: true });
+          a.addEventListener('touchstart', handler, { capture: true, passive: false });
+        });
+
+        // Fermer en cliquant sur le fond grisé
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        // Fermer avec Échap
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+        });
+
+        phoneNumberEl.addEventListener('click', async () => {
+          try { await navigator.clipboard.writeText(phoneNumberEl.textContent.trim()); } catch {}
+        });
+
+        /* =======================
+        *  FILTRE + TABS
+        * ======================= */
+        const select = document.getElementById('teamFilter');
+        if (select) {
+          function filterCards() {
+            const selectedGroup = select.value;
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabPanes.forEach((pane) => {
+              const cards = pane.querySelectorAll('.card');
+              cards.forEach((card) => {
+                const groups = (card.getAttribute('data-group') || '').split(' ');
+                if (selectedGroup === 'teamselect') {
+                  card.style.display = groups.includes('teamselect') ? '' : 'none';
+                } else {
+                  card.style.display = groups.includes(selectedGroup) ? '' : 'none';
+                }
+              });
+            });
+          }
+
+          select.addEventListener('change', filterCards);
+
+          const tabs = document.querySelectorAll('#myTab a[data-toggle="tab"]');
+          tabs.forEach((tab) => {
+            tab.addEventListener('shown.bs.tab', function () {
+              filterCards(); // à chaque tab switch
+
+              // Scroll uniquement sur mobile
+              if (window.innerWidth <= 767) {
+                const targetSelector = tab.getAttribute('href');
+                const targetPane = document.querySelector(targetSelector);
+                if (targetPane) {
+                  setTimeout(() => {
+                    const rect = targetPane.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const offset = rect.top + scrollTop; // ajuste si navbar fixe
+                    window.scrollTo({ top: offset, behavior: 'smooth' });
+                  }, 300);
+                }
+              }
+            });
+          });
+
+          filterCards(); // appel initial
+        }
+      });
     </script>
+
 
 
   </body>
