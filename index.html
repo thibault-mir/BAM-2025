@@ -1293,9 +1293,138 @@
     </div>
 
     <!-- Go to Top Link -->
-    <a href="#" class="back-to-top">
+    <!-- <a href="#" class="back-to-top">
       <i class="lni-chevron-up"></i>
-    </a>
+    </a> -->
+
+    <!-- Weather Widget -->
+    <!-- Weather (float) -->
+    <!-- <div class="weather-float">
+      <a class="weatherwidget-io" 
+        href="https://forecast7.com/en/43d557d02/cannes/"
+        data-label_1="Cannes"
+        data-label_2="WEATHER"
+        data-days="5" 
+        data-theme="original"
+        data-basecolor="rgba(39, 39, 39, 0.49)" 
+        data-shadow="rgba(255, 255, 255, 0.36)"
+        style="width:280px; height:130px">
+        Cannes
+      </a>
+    </div>
+
+    <script>
+    !function(d,s,id){
+      var js,fjs=d.getElementsByTagName(s)[0];
+      if(!d.getElementById(id)){
+        js=d.createElement(s);
+        js.id=id;
+        js.src='https://weatherwidget.io/js/widget.min.js';
+        fjs.parentNode.insertBefore(js,fjs);
+      }
+    }(document,'script','weatherwidget-io-js');
+    </script> -->
+    <!-- Weather Widget -->
+    <!-- Weather (float) -->
+
+    <!-- Weather (float, collapsible) -->
+<div class="weather-float ww-collapsed" id="weatherBox">
+  <button class="ww-toggle" id="wwToggle" aria-expanded="false" aria-controls="weatherBox" title="Afficher la météo complète">
+    ▲
+  </button>
+
+  <a class="weatherwidget-io" 
+     href="https://forecast7.com/en/43d557d02/cannes/"
+     data-label_1="Cannes"
+     data-label_2="WEATHER"
+     data-days="5"
+     data-theme="original"
+     data-basecolor="rgba(39, 39, 39, 0.49)"
+     data-shadow="rgba(255, 255, 255, 0.36)">
+     Cannes
+  </a>
+</div>
+
+<script>
+!function(d,s,id){
+  var js,fjs=d.getElementsByTagName(s)[0];
+  if(!d.getElementById(id)){
+    js=d.createElement(s);
+    js.id=id; js.src='https://weatherwidget.io/js/widget.min.js';
+    fjs.parentNode.insertBefore(js,fjs);
+  }
+}(document,'script','weatherwidget-io-js');
+
+// Toggle open/close
+(function(){
+  const box = document.getElementById('weatherBox');
+  const btn = document.getElementById('wwToggle');
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    const open = box.classList.toggle('ww-open');
+    box.classList.toggle('ww-collapsed', !open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? '▼' : '▲';
+    btn.title = open ? 'Réduire' : 'Afficher la météo complète';
+  });
+})();
+</script>
+
+<style>
+/* Tweaks faciles */
+:root{
+  --ww-width: 280px;
+  --ww-collapsed: 130px;  /* hauteur réduite */
+  --ww-expanded: 460px;   /* hauteur étendue (ajuste selon ton widget) */
+}
+
+/* Position en bas à droite, toujours visible */
+.weather-float{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: var(--ww-width);
+  max-width: 90vw;
+  z-index: 10000;
+  overflow: hidden;                /* masque le reste du widget quand compact */
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+  transition: max-height 250ms ease;
+  background: transparent;         /* le widget a déjà un fond */
+}
+
+/* États */
+.weather-float.ww-collapsed{ max-height: var(--ww-collapsed); }
+.weather-float.ww-open{      max-height: var(--ww-expanded);  }
+
+/* Le lien-widget occupe tout l'espace */
+.weather-float .weatherwidget-io{ display:block !important; }
+
+/* Bouton de toggle flottant dans le coin */
+.ww-toggle{
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 4px 6px;
+  font: 600 12px/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0,0,0,.45);
+  color: #fff;
+  cursor: pointer;
+  z-index: 2;              /* au-dessus de l’iframe */
+}
+
+/* Mobile */
+@media (max-width: 640px){
+  :root{ --ww-width: 220px; --ww-collapsed: 120px; --ww-expanded: 420px; }
+  .weather-float{ bottom:12px; right:12px; }
+}
+
+/* Ne pas imprimer */
+@media print{ .weather-float{ display:none; } }
+</style>
+
 
     <div id="preloader">
       <div class="sk-circle">

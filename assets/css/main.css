@@ -2341,3 +2341,38 @@ a.back-to-top:focus {
   opacity: 0;
   transform: translateY(-8px);
 }
+/* Positionne le widget en bas à droite, toujours visible */
+.weather-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 280px; /* ajuste la largeur selon ton design */
+  max-width: 85vw; /* évite qu’il dépasse sur mobile */
+  z-index: 10000; /* au-dessus du contenu */
+}
+
+/* Optionnel : s’assurer que le lien prend tout l’espace */
+.weather-float .weatherwidget-io {
+  display: block !important;
+}
+
+/* Si tu gardes le bouton Back-to-top au même coin, décale le widget au-dessus */
+.weather-float.has-backtotop {
+  bottom: 90px; /* laisse de la place au bouton */
+}
+
+/* Mobile : plus compact */
+@media (max-width: 640px) {
+  .weather-float {
+    bottom: 12px;
+    right: 12px;
+    width: 210px;
+  }
+}
+
+/* Optionnel : ne pas l’imprimer */
+@media print {
+  .weather-float {
+    display: none;
+  }
+}
