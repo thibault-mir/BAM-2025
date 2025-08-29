@@ -1328,6 +1328,8 @@
     <!-- Weather (float) -->
 
     <!-- Weather (float, collapsible) -->
+<!-- Weather (float, responsive & collapsible) -->
+<!-- Weather (float, mobile-compact & expandable) -->
 <div class="weather-float ww-collapsed" id="weatherBox">
   <button class="ww-toggle" id="wwToggle" aria-expanded="false" aria-controls="weatherBox" title="Afficher la météo complète">
     ▲
@@ -1355,7 +1357,6 @@
   }
 }(document,'script','weatherwidget-io-js');
 
-// Toggle open/close
 (function(){
   const box = document.getElementById('weatherBox');
   const btn = document.getElementById('wwToggle');
@@ -1371,59 +1372,92 @@
 </script>
 
 <style>
-/* Tweaks faciles */
+/* ------- Desktop par défaut ------- */
 :root{
-  --ww-width: 280px;
-  --ww-collapsed: 130px;  /* hauteur réduite */
-  --ww-expanded: 460px;   /* hauteur étendue (ajuste selon ton widget) */
+  --ww-width-desktop: 280px;   /* largeur desktop (fermée & ouverte) */
+  --ww-h-collapsed: 130px;     /* hauteur compacte */
+  --ww-h-open: 460px;          /* hauteur ouverte desktop */
+  --ww-gap: 20px;
+  --ww-z: 10000;
 }
 
-/* Position en bas à droite, toujours visible */
+/* ------- Mobile (≤ 640px) ------- */
+/* largeur très réduite quand fermé, plus large quand ouvert */
+@media (max-width: 640px){
+  :root{
+    --ww-width-mobile-closed: 170px;   /* <<< super compact */
+    --ww-width-mobile-open: 300px;     /* <<< s’agrandit au tap */
+    --ww-h-collapsed: 120px;
+    --ww-h-open: min(70vh, 520px);
+    --ww-gap: 12px;
+  }
+}
+
+/* Boîte flottante */
 .weather-float{
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: var(--ww-width);
-  max-width: 90vw;
-  z-index: 10000;
-  overflow: hidden;                /* masque le reste du widget quand compact */
+  right: max(var(--ww-gap), env(safe-area-inset-right));
+  bottom: calc(var(--ww-gap) + env(safe-area-inset-bottom));
+  z-index: var(--ww-z);
+  overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(0,0,0,.25);
-  transition: max-height 250ms ease;
-  background: transparent;         /* le widget a déjà un fond */
+  background: transparent;
+  /* transitions lisses de largeur + hauteur */
+  transition: width 220ms ease, max-height 250ms ease;
+  will-change: width, max-height;
+  max-width: 92vw; /* sécurité */
 }
 
-/* États */
-.weather-float.ww-collapsed{ max-height: var(--ww-collapsed); }
-.weather-float.ww-open{      max-height: var(--ww-expanded);  }
+/* Largeur par état — desktop */
+.weather-float{ width: var(--ww-width-desktop); }
 
-/* Le lien-widget occupe tout l'espace */
-.weather-float .weatherwidget-io{ display:block !important; }
+/* Largeur par état — mobile */
+@media (max-width: 640px){
+  .weather-float{ width: var(--ww-width-mobile-closed); }
+  .weather-float.ww-open{ width: var(--ww-width-mobile-open); }
+}
 
-/* Bouton de toggle flottant dans le coin */
+/* Hauteur par état */
+.weather-float.ww-collapsed{ max-height: var(--ww-h-collapsed); }
+.weather-float.ww-open{      max-height: var(--ww-h-open); }
+
+/* Le widget occupe tout l’espace du conteneur */
+.weather-float .weatherwidget-io{
+  display: block !important;
+  min-width: 0; /* évite tout overflow interne */
+}
+
+/* Bouton toggle (tap-friendly) */
 .ww-toggle{
   position: absolute;
-  top: 6px;
-  right: 6px;
-  padding: 4px 6px;
-  font: 600 12px/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  top: 6px; right: 6px;
+  min-width: 40px; min-height: 40px;
+  padding: 0 6px;
+  font: 600 14px/40px system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  text-align: center;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgba(0,0,0,.45);
   color: #fff;
   cursor: pointer;
-  z-index: 2;              /* au-dessus de l’iframe */
+  z-index: 2;
 }
 
-/* Mobile */
-@media (max-width: 640px){
-  :root{ --ww-width: 220px; --ww-collapsed: 120px; --ww-expanded: 420px; }
-  .weather-float{ bottom:12px; right:12px; }
+/* Option si tu as un back-to-top dans le même coin */
+.weather-float.has-backtotop{
+  bottom: calc(var(--ww-gap) + 56px + env(safe-area-inset-bottom));
+}
+
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce){
+  .weather-float{ transition: none; }
 }
 
 /* Ne pas imprimer */
-@media print{ .weather-float{ display:none; } }
+@media print{ .weather-float{ display: none; } }
 </style>
+
 
 
     <div id="preloader">
