@@ -2341,27 +2341,27 @@ a.back-to-top:focus {
   opacity: 0;
   transform: translateY(-8px);
 }
-/* Positionne le widget en bas à droite, toujours visible */
+/* Positionne le widget en bas à droite, toujours visible
 .weather-float {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 280px; /* ajuste la largeur selon ton design */
-  max-width: 85vw; /* évite qu’il dépasse sur mobile */
-  z-index: 10000; /* au-dessus du contenu */
+  width: 280px; 
+  max-width: 85vw; 
+  z-index: 10000; 
 }
 
-/* Optionnel : s’assurer que le lien prend tout l’espace */
+
 .weather-float .weatherwidget-io {
   display: block !important;
 }
 
-/* Si tu gardes le bouton Back-to-top au même coin, décale le widget au-dessus */
+
 .weather-float.has-backtotop {
-  bottom: 90px; /* laisse de la place au bouton */
+  bottom: 90px; 
 }
 
-/* Mobile : plus compact */
+
 @media (max-width: 640px) {
   .weather-float {
     bottom: 12px;
@@ -2370,7 +2370,110 @@ a.back-to-top:focus {
   }
 }
 
-/* Optionnel : ne pas l’imprimer */
+
+@media print {
+  .weather-float {
+    display: none;
+  }
+} */
+
+/* ------- Desktop par défaut ------- */
+:root {
+  --ww-width-desktop: 280px; /* largeur desktop (fermée & ouverte) */
+  --ww-h-collapsed: 130px; /* hauteur compacte */
+  --ww-h-open: 460px; /* hauteur ouverte desktop */
+  --ww-gap: 20px;
+  --ww-z: 10000;
+}
+
+/* ------- Mobile (≤ 640px) ------- */
+/* largeur très réduite quand fermé, plus large quand ouvert */
+@media (max-width: 640px) {
+  :root {
+    --ww-width-mobile-closed: 170px; /* <<< super compact */
+    --ww-width-mobile-open: 300px; /* <<< s’agrandit au tap */
+    --ww-h-collapsed: 120px;
+    --ww-h-open: min(70vh, 520px);
+    --ww-gap: 12px;
+  }
+}
+
+/* Boîte flottante */
+.weather-float {
+  position: fixed;
+  right: max(var(--ww-gap), env(safe-area-inset-right));
+  bottom: calc(var(--ww-gap) + env(safe-area-inset-bottom));
+  z-index: var(--ww-z);
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  background: transparent;
+  /* transitions lisses de largeur + hauteur */
+  transition: width 220ms ease, max-height 250ms ease;
+  will-change: width, max-height;
+  max-width: 92vw; /* sécurité */
+}
+
+/* Largeur par état — desktop */
+.weather-float {
+  width: var(--ww-width-desktop);
+}
+
+/* Largeur par état — mobile */
+@media (max-width: 640px) {
+  .weather-float {
+    width: var(--ww-width-mobile-closed);
+  }
+  .weather-float.ww-open {
+    width: var(--ww-width-mobile-open);
+  }
+}
+
+/* Hauteur par état */
+.weather-float.ww-collapsed {
+  max-height: var(--ww-h-collapsed);
+}
+.weather-float.ww-open {
+  max-height: var(--ww-h-open);
+}
+
+/* Le widget occupe tout l’espace du conteneur */
+.weather-float .weatherwidget-io {
+  display: block !important;
+  min-width: 0; /* évite tout overflow interne */
+}
+
+/* Bouton toggle (tap-friendly) */
+.ww-toggle {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0 6px;
+  font: 600 14px/30px system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Option si tu as un back-to-top dans le même coin */
+.weather-float.has-backtotop {
+  bottom: calc(var(--ww-gap) + 56px + env(safe-area-inset-bottom));
+}
+
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .weather-float {
+    transition: none;
+  }
+}
+
+/* Ne pas imprimer */
 @media print {
   .weather-float {
     display: none;

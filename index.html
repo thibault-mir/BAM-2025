@@ -1297,166 +1297,53 @@
       <i class="lni-chevron-up"></i>
     </a> -->
 
-    <!-- Weather Widget -->
-    <!-- Weather (float) -->
-    <!-- <div class="weather-float">
-      <a class="weatherwidget-io" 
-        href="https://forecast7.com/en/43d557d02/cannes/"
-        data-label_1="Cannes"
-        data-label_2="WEATHER"
-        data-days="5" 
-        data-theme="original"
-        data-basecolor="rgba(39, 39, 39, 0.49)" 
-        data-shadow="rgba(255, 255, 255, 0.36)"
-        style="width:280px; height:130px">
-        Cannes
-      </a>
-    </div>
-
-    <script>
-    !function(d,s,id){
-      var js,fjs=d.getElementsByTagName(s)[0];
-      if(!d.getElementById(id)){
-        js=d.createElement(s);
-        js.id=id;
-        js.src='https://weatherwidget.io/js/widget.min.js';
-        fjs.parentNode.insertBefore(js,fjs);
-      }
-    }(document,'script','weatherwidget-io-js');
-    </script> -->
-    <!-- Weather Widget -->
-    <!-- Weather (float) -->
-
-    <!-- Weather (float, collapsible) -->
 <!-- Weather (float, responsive & collapsible) -->
 <!-- Weather (float, mobile-compact & expandable) -->
-<div class="weather-float ww-collapsed" id="weatherBox">
-  <button class="ww-toggle" id="wwToggle" aria-expanded="false" aria-controls="weatherBox" title="Afficher la météo complète">
-    ▲
-  </button>
+  <div class="weather-float ww-collapsed" id="weatherBox">
+    <button class="ww-toggle" id="wwToggle" aria-expanded="false" aria-controls="weatherBox" title="Afficher la météo complète">
+      ▲
+    </button>
 
-  <a class="weatherwidget-io" 
-     href="https://forecast7.com/en/43d557d02/cannes/"
-     data-label_1="Cannes"
-     data-label_2="WEATHER"
-     data-days="5"
-     data-theme="original"
-     data-basecolor="rgba(39, 39, 39, 0.49)"
-     data-shadow="rgba(255, 255, 255, 0.36)">
-     Cannes
-  </a>
-</div>
+    <a class="weatherwidget-io" 
+      href="https://forecast7.com/en/43d557d02/cannes/"
+      data-label_1="Cannes"
+      data-label_2="France"
+      data-days="5"
+      data-theme="original"
+      data-icons="Climacons Animated"
+      data-basecolor="rgba(39, 39, 39, 0.20)"
+      data-shadow="rgba(255, 255, 255, 0.20)"
+      data-highcolor="#db4848"
+      data-lowcolor="#4985da">
+      Cannes
+    </a>
+  </div>
 
-<script>
-!function(d,s,id){
-  var js,fjs=d.getElementsByTagName(s)[0];
-  if(!d.getElementById(id)){
-    js=d.createElement(s);
-    js.id=id; js.src='https://weatherwidget.io/js/widget.min.js';
-    fjs.parentNode.insertBefore(js,fjs);
-  }
-}(document,'script','weatherwidget-io-js');
+  <script>
+  !function(d,s,id){
+    var js,fjs=d.getElementsByTagName(s)[0];
+    if(!d.getElementById(id)){
+      js=d.createElement(s);
+      js.id=id; js.src='https://weatherwidget.io/js/widget.min.js';
+      fjs.parentNode.insertBefore(js,fjs);
+    }
+  }(document,'script','weatherwidget-io-js');
 
-(function(){
-  const box = document.getElementById('weatherBox');
-  const btn = document.getElementById('wwToggle');
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    const open = box.classList.toggle('ww-open');
-    box.classList.toggle('ww-collapsed', !open);
-    btn.setAttribute('aria-expanded', String(open));
-    btn.textContent = open ? '▼' : '▲';
-    btn.title = open ? 'Réduire' : 'Afficher la météo complète';
-  });
-})();
-</script>
-
-<style>
-/* ------- Desktop par défaut ------- */
-:root{
-  --ww-width-desktop: 280px;   /* largeur desktop (fermée & ouverte) */
-  --ww-h-collapsed: 130px;     /* hauteur compacte */
-  --ww-h-open: 460px;          /* hauteur ouverte desktop */
-  --ww-gap: 20px;
-  --ww-z: 10000;
-}
-
-/* ------- Mobile (≤ 640px) ------- */
-/* largeur très réduite quand fermé, plus large quand ouvert */
-@media (max-width: 640px){
-  :root{
-    --ww-width-mobile-closed: 170px;   /* <<< super compact */
-    --ww-width-mobile-open: 300px;     /* <<< s’agrandit au tap */
-    --ww-h-collapsed: 120px;
-    --ww-h-open: min(70vh, 520px);
-    --ww-gap: 12px;
-  }
-}
-
-/* Boîte flottante */
-.weather-float{
-  position: fixed;
-  right: max(var(--ww-gap), env(safe-area-inset-right));
-  bottom: calc(var(--ww-gap) + env(safe-area-inset-bottom));
-  z-index: var(--ww-z);
-  overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 6px 24px rgba(0,0,0,.25);
-  background: transparent;
-  /* transitions lisses de largeur + hauteur */
-  transition: width 220ms ease, max-height 250ms ease;
-  will-change: width, max-height;
-  max-width: 92vw; /* sécurité */
-}
-
-/* Largeur par état — desktop */
-.weather-float{ width: var(--ww-width-desktop); }
-
-/* Largeur par état — mobile */
-@media (max-width: 640px){
-  .weather-float{ width: var(--ww-width-mobile-closed); }
-  .weather-float.ww-open{ width: var(--ww-width-mobile-open); }
-}
-
-/* Hauteur par état */
-.weather-float.ww-collapsed{ max-height: var(--ww-h-collapsed); }
-.weather-float.ww-open{      max-height: var(--ww-h-open); }
-
-/* Le widget occupe tout l’espace du conteneur */
-.weather-float .weatherwidget-io{
-  display: block !important;
-  min-width: 0; /* évite tout overflow interne */
-}
-
-/* Bouton toggle (tap-friendly) */
-.ww-toggle{
-  position: absolute;
-  top: 6px; right: 6px;
-  min-width: 40px; min-height: 40px;
-  padding: 0 6px;
-  font: 600 14px/40px system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  text-align: center;
-  border: none;
-  border-radius: 10px;
-  background: rgba(0,0,0,.45);
-  color: #fff;
-  cursor: pointer;
-  z-index: 2;
-}
-
-/* Option si tu as un back-to-top dans le même coin */
-.weather-float.has-backtotop{
-  bottom: calc(var(--ww-gap) + 56px + env(safe-area-inset-bottom));
-}
-
-/* Accessibilité */
-@media (prefers-reduced-motion: reduce){
-  .weather-float{ transition: none; }
-}
-
-/* Ne pas imprimer */
-@media print{ .weather-float{ display: none; } }
-</style>
+  (function(){
+    const box = document.getElementById('weatherBox');
+    const btn = document.getElementById('wwToggle');
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const open = box.classList.toggle('ww-open');
+      box.classList.toggle('ww-collapsed', !open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.textContent = open ? '▼' : '▲';
+      btn.title = open ? 'Réduire' : 'Afficher la météo complète';
+    });
+  })();
+  </script>
+<!-- Weather (float, responsive & collapsible) -->
+<!-- Weather (float, mobile-compact & expandable) -->
 
 
 
