@@ -2455,7 +2455,7 @@ a.back-to-top:focus {
   text-align: center;
   border: none;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0);
   color: #fff;
   cursor: pointer;
   z-index: 2;
