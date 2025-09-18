@@ -2479,3 +2479,116 @@ a.back-to-top:focus {
     display: none;
   }
 }
+
+.card-header .click-icon {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 18px;
+  opacity: 1;
+  transition: transform 0.3s ease, opacity 0.3s;
+}
+
+/* rotation quand la section est ouverte */
+.card-header[aria-expanded="true"] .click-icon {
+  transform: rotate(180deg);
+}
+
+/* ====== MODAL ====== */
+.ms-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 10050; /* au-dessus du bouton+weather */
+}
+
+.ms-modal.is-open {
+  display: block;
+}
+
+.ms-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ms-modal.is-open .ms-modal__backdrop {
+  opacity: 1;
+}
+
+.ms-modal__dialog {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(92vw, 820px);
+  height: min(86vh, 720px);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.ms-modal.is-open .ms-modal__dialog {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.ms-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.ms-modal__close {
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+}
+.ms-modal__close:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.ms-modal__body {
+  flex: 1;
+  min-height: 0; /* important pour que l’iframe prenne bien la hauteur */
+  padding: 0;
+}
+
+#msFormFrame {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Désactive le scroll du body quand la modal est ouverte */
+body.ms-modal-open {
+  overflow: hidden;
+}
+
+/* le bouton est complètement séparé et fixe */
+.floating-btn {
+  position: fixed;
+  font-size: 14px;
+  right: 21px;
+  bottom: 60px; /* sera écrasé par JS */
+  z-index: 10000; /* au-dessus du widget */
+  text-decoration: none;
+  /* Optionnel: un peu de style si besoin */
+  display: inline-block;
+  border-radius: 5px;
+  font-weight: 800;
+  padding: 10px 54px 10px 54px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
