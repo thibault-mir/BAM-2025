@@ -1,0 +1,152 @@
+<!-- Weather (float, responsive & collapsible) -->
+<!-- Weather (float, mobile-compact & expandable) -->
+
+<a
+  id="floatAction"
+  href="#"
+  target="_blank"
+  class="fadeInLeft wow btn btn-common btn-lg floating-btn"
+>
+  SUBMIT YOUR QUESTION
+</a>
+<div class="weather-float ww-collapsed" id="weatherBox">
+  <button class="ww-toggle" id="wwToggle" aria-expanded="false" aria-controls="weatherBox" title="Afficher la météo complète">
+    ▲
+  </button>
+
+  <a class="weatherwidget-io" 
+    href="https://forecast7.com/en/43d557d02/cannes/"
+    data-label_1="Cannes"
+    data-label_2="France"
+    data-days="5"
+    data-theme="original"
+    data-icons="Climacons Animated"
+    data-basecolor="rgba(39, 39, 39, 0.15)"
+    data-shadow="rgba(255, 255, 255, 0.20)"
+    data-highcolor="#db4848"
+    data-lowcolor="#4985da">
+    Cannes
+  </a>
+</div>
+
+<!-- MODAL MICROSOFT FORM -->
+<div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="msFormTitle">
+  <div class="ms-modal__backdrop" data-close="true"></div>
+
+  <div class="ms-modal__dialog" role="document">
+    <div class="ms-modal__body" style="border-radius: 10px;">
+      <iframe id="msFormFrame"
+        src="https://forms.office.com/Pages/ResponsePage.aspx?id=9k8KzFSUS06IG4X0SN7i40L4WUFzALROviKeCe_mRi9UMFZWN1RPU05VMVNITkNYVDlIUVRRRzhTNS4u&embed=true"
+        style="width:100%;height:100%;border:none;zoom:74%;border-radius: 10px;"></iframe>
+    </div>
+  </div>
+</div>
+
+
+<script>
+!function(d,s,id){
+  var js,fjs=d.getElementsByTagName(s)[0];
+  if(!d.getElementById(id)){
+    js=d.createElement(s);
+    js.id=id; js.src='https://weatherwidget.io/js/widget.min.js';
+    fjs.parentNode.insertBefore(js,fjs);
+  }
+}(document,'script','weatherwidget-io-js');
+
+(function(){
+  const box = document.getElementById('weatherBox');
+  const btn = document.getElementById('wwToggle');
+  const action = document.getElementById('floatAction');
+  const GAP = 26; // espace entre le bouton et le widget
+
+  function positionButton() {
+    // hauteur du widget (ou minimum si invisible/chargement)
+    const h = box.offsetHeight || 0;
+    action.style.bottom = (h + GAP) + 'px';
+  }
+
+  // Toggle existant + repositionnement
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    const open = box.classList.toggle('ww-open');
+    box.classList.toggle('ww-collapsed', !open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? '▼' : '▲';
+    btn.title = open ? 'Réduire' : 'Afficher la météo complète';
+
+    // si le widget anime/charge, on recalcule après un tick
+    requestAnimationFrame(()=> {
+      positionButton();
+      setTimeout(positionButton, 250); // après l'anim CSS éventuelle
+    });
+  });
+
+  // Recalc au chargement, au resize, et un petit polling initial (iframe météo peut ajuster sa hauteur)
+  window.addEventListener('resize', positionButton);
+  document.addEventListener('DOMContentLoaded', ()=> {
+    positionButton();
+    setTimeout(positionButton, 500);
+    setTimeout(positionButton, 1500);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const trigger = document.getElementById('floatAction'); // ton bouton
+  const modal   = document.getElementById('msFormModal');
+  const iframe  = document.getElementById('msFormFrame');
+  let lastFocused = null;
+
+  function openModal(){
+    lastFocused = document.activeElement;
+    // Lazy-load de l’iframe
+    if (!iframe.src) {
+      iframe.src = iframe.dataset.src;
+    }
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('ms-modal-open');
+
+    // Focus sur le bouton fermer
+    const closeBtn = modal.querySelector('.ms-modal__close');
+    closeBtn && closeBtn.focus();
+
+    // Optionnel: léger recalage quand l’iframe se charge
+    setTimeout(()=> iframe && iframe.focus && iframe.focus(), 400);
+  }
+
+  function closeModal(){
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('ms-modal-open');
+    // Rendre le focus au bouton déclencheur
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  // Ouvrir via le bouton flottant
+  if (trigger) {
+    trigger.addEventListener('click', function(e){
+      e.preventDefault();
+      openModal();
+    });
+  }
+
+  // Fermer: clic sur backdrop ou bouton [x]
+  modal.addEventListener('click', function(e){
+    if (e.target.matches('[data-close="true"]')) {
+      closeModal();
+    }
+  });
+
+  // ESC pour fermer
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
+})();
+</script>
+
+<!-- Weather (float, responsive & collapsible) -->
+<!-- Weather (float, mobile-compact & expandable) -->

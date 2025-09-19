@@ -2398,11 +2398,18 @@ a.back-to-top:focus {
   }
 }
 
+:root {
+  --btn-bottom: 10px; /* marge bas écran */
+  --gap: 12px; /* espace entre bouton et météo */
+  --btn-h: 48px; /* hauteur du bouton (valeur par défaut, sera écrasée en JS) */
+}
+
 /* Boîte flottante */
 .weather-float {
   position: fixed;
   right: max(var(--ww-gap), env(safe-area-inset-right));
-  bottom: calc(var(--ww-gap) + env(safe-area-inset-bottom));
+  /* bottom: calc(var(--ww-gap) + env(safe-area-inset-bottom)); */
+  bottom: calc(var(--btn-bottom) + var(--btn-h) + var(--gap));
   z-index: var(--ww-z);
   overflow: hidden;
   border-radius: 12px;
@@ -2577,18 +2584,24 @@ body.ms-modal-open {
   overflow: hidden;
 }
 
-/* le bouton est complètement séparé et fixe */
+.floating-btn {
+  position: fixed;
+  padding: 12px 55px;
+  right: 20px;
+  bottom: var(--btn-bottom);
+  z-index: 10000;
+}
+/* le bouton est complètement séparé et fixe
 .floating-btn {
   position: fixed;
   font-size: 14px;
   right: 21px;
-  bottom: 60px; /* sera écrasé par JS */
-  z-index: 10000; /* au-dessus du widget */
+  bottom: 60px;
+  z-index: 10000; 
   text-decoration: none;
-  /* Optionnel: un peu de style si besoin */
   display: inline-block;
   border-radius: 5px;
   font-weight: 800;
   padding: 10px 54px 10px 54px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
+} */

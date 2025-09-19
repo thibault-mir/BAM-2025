@@ -1,0 +1,389 @@
+<!-- Schedule Section Start -->
+<section id="schedules" class="schedule section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="section-title-header text-center">
+          <h1 class="section-title wow fadeInUp" data-wow-delay="0.2s">
+            Event Schedules
+          </h1>
+          <p class="wow fadeInDown" data-wow-delay="0.2s">
+            BAM Seminar @ Cannes 2025
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="schedule-area row wow fadeInDown" data-wow-delay="0.3s">
+      <div class="schedule-tab-title col-md-3 col-lg-3 col-xs-12">
+        <div class="table-responsive">
+          <div class="form-group">
+            <!-- <label for="teamFilter">Select your team:</label> -->
+            <select id="teamFilter" class="form-control">
+              <option value="teamselect" selected disabled>
+                — Select your team —
+              </option>
+
+              <optgroup label="HOSP">
+                <option value="hosp_nl">HOSP - NL</option>
+                <option value="hosp_fr">HOSP - FR</option>
+              </optgroup>
+
+              <optgroup label="PHARMA">
+                <option value="ph_nl">PHARMA - NL</option>
+                <option value="ph_fr">PHARMA - FR</option>
+              </optgroup>
+
+              <optgroup label="GP SB">
+                <option value="sb_nl">GP SB - NL</option>
+                <option value="sb_fr">GP SB - FR</option>
+              </optgroup>
+
+              <optgroup label="GP EU">
+                <option value="eu_nl">GP EU - NL</option>
+                <option value="eu_fr">GP EU - FR</option>
+              </optgroup>
+
+              <optgroup label="Oncology">
+                <option value="onco_gi">ONCO - GI</option>
+                <option value="onco_hemato">ONCO - Hemato</option>
+              </optgroup>
+
+              <optgroup label="Medical Affairs">
+                <option value="maf_cmvd">MED AFF - CMVD</option>
+                <option value="maf_onco">MED AFF - ONCO GI</option>
+                <option value="maf_oncohemato">MED AFF - ONCO Hemato</option>
+              </optgroup>
+
+              <optgroup label="Marketing">
+                <option value="mkt_hta">MKT - HTA</option>
+                <option value="mkt_metabo">MKT - Metabo</option>
+              </optgroup>
+
+              <optgroup label="Other">
+                <option value="lux">LUX</option>
+                <option value="int">INTERNAL TEAM</option>
+              </optgroup>
+            </select>
+          </div>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="monday-tab"
+                data-toggle="tab"
+                href="#monday"
+                role="tab"
+                aria-controls="monday"
+                aria-expanded="true"
+              >
+                <div class="item-text">
+                  <h4>Monday</h4>
+                  <h5>22 September</h5>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="tuesday-tab"
+                data-toggle="tab"
+                href="#tuesday"
+                role="tab"
+                aria-controls="tuesday"
+              >
+                <div class="item-text">
+                  <h4>Tuesday</h4>
+                  <h5>23 September</h5>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="wednesday-tab"
+                data-toggle="tab"
+                href="#wednesday"
+                role="tab"
+                aria-controls="wednesday"
+              >
+                <div class="item-text">
+                  <h4>Wednesday</h4>
+                  <h5>24 September</h5>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="thursday-tab"
+                data-toggle="tab"
+                href="#thursday"
+                role="tab"
+                aria-controls="thursday"
+              >
+                <div class="item-text">
+                  <h4>Thursday</h4>
+                  <h5>25 September</h5>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="thursday-tab"
+                data-toggle="tab"
+                href="#friday"
+                role="tab"
+                aria-controls="thursday"
+              >
+                <div class="item-text">
+                  <h4>Friday</h4>
+                  <h5>26 September</h5>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="schedule-tab-content col-md-9 col-lg-9 col-xs-12 clearfix">
+        <div class="tab-content" id="myTabContent">
+          <!-- MONDAY Schedule Section -->
+          <div
+            class="tab-pane fade show active"
+            id="monday"
+            role="tabpanel"
+            aria-labelledby="monday-tab"
+          >
+            <div id="accordion">
+              <div class="card" data-group="teamselect">
+                <div id="headingNSM">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">⚠️ Select your team first !</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card"
+                data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr int onco_gi onco_hemato mkt_metabo mkt_hta maf_cmvd maf_onco maf_oncohemato lux"
+              >
+                <div id="headingMondayNoInt">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">
+                      ⚠️ Schedule coming soon ! Be patient Bro !
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- MONDAY Schedule Section End -->
+
+          <!-- TUESDAY Schedule Section -->
+          <div
+            class="tab-pane fade"
+            id="tuesday"
+            role="tabpanel"
+            aria-labelledby="tuesday-tab"
+          >
+            <div id="accordion2">
+              <div class="card" data-group="teamselect">
+                <div id="headingNSTU">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">⚠️ Select your team first !</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card"
+                data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr int onco_gi onco_hemato mkt_metabo mkt_hta maf_cmvd maf_onco maf_oncohemato lux"
+              >
+                <div id="headingMondayNoInt">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">
+                      ⚠️ Schedule coming soon ! Be patient Bro !
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- TUESDAY Schedule Section End -->
+
+          <!-- WEDNESDAY Schedule Section -->
+          <div
+            class="tab-pane fade"
+            id="wednesday"
+            role="tabpanel"
+            aria-labelledby="wednesday-tab"
+          >
+            <div id="accordion3">
+              <div class="card" data-group="teamselect">
+                <div id="headingFive">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">⚠️ Select your team first !</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card"
+                data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr int onco_gi onco_hemato mkt_metabo mkt_hta maf_cmvd maf_onco maf_oncohemato lux"
+              >
+                <div id="headingMondayNoInt">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">
+                      ⚠️ Schedule coming soon ! Be patient Bro !
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- WEDNESDAY Schedule Section End -->
+
+          <!-- THURSDAY Schedule Section -->
+          <div
+            class="tab-pane fade"
+            id="thursday"
+            role="tabpanel"
+            aria-labelledby="thursday-tab"
+          >
+            <div id="accordion4">
+              <div class="card" data-group="teamselect">
+                <div id="headingNST">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">⚠️ Select your team first !</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card"
+                data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr int onco_gi onco_hemato mkt_metabo mkt_hta maf_cmvd maf_onco maf_oncohemato lux"
+              >
+                <div id="headingMondayNoInt">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">
+                      ⚠️ Schedule coming soon ! Be patient Bro !
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- THURSDAY Schedule Section -->
+
+          <!-- FRIDAY Schedule Section -->
+          <div
+            class="tab-pane fade"
+            id="friday"
+            role="tabpanel"
+            aria-labelledby="friday-tab"
+          >
+            <div id="accordion4">
+              <div class="card" data-group="teamselect">
+                <div id="headingNST">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">⚠️ Select your team first !</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card"
+                data-group="hosp_nl hosp_fr ph_nl ph_fr sb_nl sb_fr eu_nl eu_fr int onco_gi onco_hemato mkt_metabo mkt_hta maf_cmvd maf_onco maf_oncohemato lux"
+              >
+                <div id="headingMondayNoInt">
+                  <div
+                    class="collapsed noteamselect"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    <div class="images-box"></div>
+
+                    <p style="font-size: 20px">
+                      ⚠️ Schedule coming soon ! Be patient Bro !
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- FRIDAY Schedule Section -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Schedule Section End -->
