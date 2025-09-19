@@ -1,7 +1,7 @@
 // api/questions.js
 module.exports = async (req, res) => {
   try {
-    const { list, get } = await import("@vercel/blob");
+    const { list } = await import("@vercel/blob");
 
     res.setHeader("Cache-Control", "no-store");
 
@@ -11,15 +11,20 @@ module.exports = async (req, res) => {
     do {
       const resp = await list({ prefix: "data/", cursor });
       for (const b of resp.blobs) {
+        // on ne garde que les .json
         if (!b.pathname.endsWith(".json")) continue;
 
-        const { body } = await get(b.pathname);
-        const chunks = [];
-        for await (const ch of body) chunks.push(Buffer.from(ch));
+        // b.url est l'URL publique (access:"public")
+        if (!b.url) continue;
+
         try {
-          const obj = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+          const r = await fetch(b.url, { cache: "no-store" });
+          if (!r.ok) continue;
+          const obj = await r.json();
           items.push(obj);
-        } catch {}
+        } catch (_) {
+          // ignore un blob illisible
+        }
       }
       cursor = resp.cursor;
     } while (cursor);
