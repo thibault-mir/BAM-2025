@@ -51,6 +51,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
+
   </head>
   <body>
     <!-- Header Area wrapper Starts -->
@@ -1323,7 +1325,7 @@
 </div>
 
 <!-- MODAL MICROSOFT FORM -->
-<div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="msFormTitle">
+<!-- <div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="msFormTitle">
   <div class="ms-modal__backdrop" data-close="true"></div>
 
   <div class="ms-modal__dialog" role="document">
@@ -1338,6 +1340,31 @@
       </form>
     </div>
   </div>
+</div> -->
+
+<!-- ... dans ton modal -->
+<div class="ms-modal__body" style="position:relative;">
+  <button type="button" class="ms-modal__close" data-close="true">&times;</button>
+  <h2 id="msFormTitle">Submit your question</h2>
+
+  <!-- OVERLAY LOADER -->
+  <div id="qLoader" class="q-loader hidden" aria-hidden="true">
+    <dotlottie-player
+      src="/assets/lottie/waiting.lottie"
+      background="transparent"
+      speed="1"
+      autoplay
+      loop
+      style="width:140px;height:140px">
+    </dotlottie-player>
+    <p>Envoi de ta question en cours…</p>
+  </div>
+
+  <form id="qForm" class="ms-form">
+    <input type="text" name="name" placeholder="Name (optional)">
+    <textarea name="question" placeholder="Your question..." required></textarea>
+    <button type="submit" class="btn btn-common btn-lg">Submit</button>
+  </form>
 </div>
 
 
@@ -1383,7 +1410,7 @@
 })();
 </script>
 
-<script>
+<!-- <script>
 (function () {
   // Attendre que le DOM soit prêt si le script est dans le <head>
   if (document.readyState === 'loading') {
@@ -1484,7 +1511,98 @@
   }
 })();
 </script>
+ -->
 
+<script>
+(function () {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  function init(){
+    const form = document.getElementById('qForm');
+    const nameInput = form?.querySelector('[name="name"]');
+    const qInput    = form?.querySelector('[name="question"]');
+    const submitBtn = form?.querySelector('[type="submit"]');
+    const loader    = document.getElementById('qLoader');
+
+    if (!form) return;
+
+    form.addEventListener('submit', onSubmit);
+
+    function showLoader(){
+      if (!loader) return;
+      loader.classList.remove('hidden');
+      loader.setAttribute('aria-hidden','false');
+      form.setAttribute('aria-busy','true');
+      // bloquer les champs
+      form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+    }
+    function hideLoader(){
+      if (!loader) return;
+      loader.classList.add('hidden');
+      loader.setAttribute('aria-hidden','true');
+      form.removeAttribute('aria-busy');
+      // réactiver les champs
+      form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = false);
+    }
+    const delay = (ms)=> new Promise(r=>setTimeout(r, ms));
+
+    async function onSubmit(e){
+      e.preventDefault();
+
+      const name = (nameInput?.value || '').trim();
+      const question = (qInput?.value || '').trim();
+      if (!question) {
+        alert('🛑 Merci d’entrer une question.');
+        qInput?.focus();
+        return;
+      }
+
+      showLoader(); // <— affiche l’overlay
+
+      try {
+        const payload = { name, question };
+
+        // On garantit 3s minimum d’affichage pour l’overlay
+        const minShow = delay(3000);
+
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const raw = await res.text();
+        let data = {};
+        try { data = JSON.parse(raw); } catch { data = { error: raw }; }
+
+        // attend la fin du délai mini
+        await minShow;
+
+        if (!res.ok) throw new Error(data.error || raw || ('HTTP ' + res.status));
+
+        // succès
+        // (tu peux aussi mettre un toast ou un message dans l’overlay si tu veux)
+        hideLoader();
+        alert('✅ Merci ! Votre question a bien été enregistrée.');
+        // reset champ question uniquement (garde le nom si tu veux)
+        if (qInput) qInput.value = '';
+
+        console.log('submit response:', data);
+
+      } catch (err) {
+        console.error('submit failed:', err);
+        await delay(300); // petite pause pour éviter un flash
+        hideLoader();
+        alert('❌ Erreur lors de l’envoi : ' + (err.message || 'inconnue'));
+      }
+    }
+  }
+})();
+</script>
 
 
 <script>
