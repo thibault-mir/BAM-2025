@@ -1327,67 +1327,20 @@
   <div class="ms-modal__backdrop" data-close="true"></div>
 
   <div class="ms-modal__dialog" role="document">
-    <div class="ms-modal__body" style="border-radius: 10px;">
-      <div id="msFormFrame"
-        style="width:100%;height:100%;border:none;zoom:74%;border-radius: 10px;">
-        <form id="qForm">
-      <input type="text" name="name" placeholder="Name (optionnel)">
-  <textarea name="question" placeholder="Your Question" required></textarea>
-  <button type="submit" class="btn btn-common btn-lg">Envoyer</button>
-  </form>
-      </div>
+    <div class="ms-modal__body" style="padding-bottom: 0px;">
+      <button type="button" class="ms-modal__close" data-close="true">&times;</button>
+      <h2 id="msFormTitle">Submit your question</h2>
+
+      <form id="qForm" class="ms-form">
+        <input type="text" name="name" placeholder="Name (optional)">
+        <textarea name="question" placeholder="Your question..." required></textarea>
+        <button type="submit" class="btn btn-common btn-lg">Submit</button>
+      </form>
     </div>
   </div>
 </div>
 
 
-<!-- <script>
-!function(d,s,id){
-  var js,fjs=d.getElementsByTagName(s)[0];
-  if(!d.getElementById(id)){
-    js=d.createElement(s);
-    js.id=id; js.src='https://weatherwidget.io/js/widget.min.js';
-    fjs.parentNode.insertBefore(js,fjs);
-  }
-}(document,'script','weatherwidget-io-js');
-
-(function(){
-  const box = document.getElementById('weatherBox');
-  const btn = document.getElementById('wwToggle');
-  const action = document.getElementById('floatAction');
-  const GAP = 26; // espace entre le bouton et le widget
-
-  function positionButton() {
-    // hauteur du widget (ou minimum si invisible/chargement)
-    const h = box.offsetHeight || 0;
-    action.style.bottom = (h + GAP) + 'px';
-  }
-
-  // Toggle existant + repositionnement
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    const open = box.classList.toggle('ww-open');
-    box.classList.toggle('ww-collapsed', !open);
-    btn.setAttribute('aria-expanded', String(open));
-    btn.textContent = open ? '▼' : '▲';
-    btn.title = open ? 'Réduire' : 'Afficher la météo complète';
-
-    // si le widget anime/charge, on recalcule après un tick
-    requestAnimationFrame(()=> {
-      positionButton();
-      setTimeout(positionButton, 250); // après l'anim CSS éventuelle
-    });
-  });
-
-  // Recalc au chargement, au resize, et un petit polling initial (iframe météo peut ajuster sa hauteur)
-  window.addEventListener('resize', positionButton);
-  document.addEventListener('DOMContentLoaded', ()=> {
-    positionButton();
-    setTimeout(positionButton, 500);
-    setTimeout(positionButton, 1500);
-  });
-})();
-</script> -->
 
 <script>
 // charge le script du widget météo
@@ -1536,59 +1489,42 @@
 
 <script>
 (function(){
-  const trigger = document.getElementById('floatAction'); // ton bouton
+  const trigger = document.getElementById('floatAction');
   const modal   = document.getElementById('msFormModal');
-  const iframe  = document.getElementById('msFormFrame');
   let lastFocused = null;
 
   function openModal(){
     lastFocused = document.activeElement;
-    // Lazy-load de l’iframe
-    if (!iframe.src) {
-      iframe.src = iframe.dataset.src;
-    }
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('ms-modal-open');
-
-    // Focus sur le bouton fermer
     const closeBtn = modal.querySelector('.ms-modal__close');
     closeBtn && closeBtn.focus();
-
-    // Optionnel: léger recalage quand l’iframe se charge
-    setTimeout(()=> iframe && iframe.focus && iframe.focus(), 400);
   }
 
   function closeModal(){
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('ms-modal-open');
-    // Rendre le focus au bouton déclencheur
     if (lastFocused && lastFocused.focus) lastFocused.focus();
   }
 
-  // Ouvrir via le bouton flottant
-  if (trigger) {
-    trigger.addEventListener('click', function(e){
-      e.preventDefault();
-      openModal();
-    });
-  }
-
-  // Fermer: clic sur backdrop ou bouton [x]
-  modal.addEventListener('click', function(e){
-    if (e.target.matches('[data-close="true"]')) {
-      closeModal();
-    }
+  trigger?.addEventListener('click', (e)=>{
+    e.preventDefault();
+    openModal();
   });
 
-  // ESC pour fermer
-  document.addEventListener('keydown', function(e){
+  modal.addEventListener('click', (e)=>{
+    if (e.target.matches('[data-close="true"]')) closeModal();
+  });
+
+  document.addEventListener('keydown', (e)=>{
     if (e.key === 'Escape' && modal.classList.contains('is-open')) {
       closeModal();
     }
   });
 })();
+
 </script>
 
 <!-- Weather (float, responsive & collapsible) -->
