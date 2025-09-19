@@ -283,8 +283,6 @@
           }
           const html = view
             .map((it) => {
-              const d = it.createdAt ? new Date(it.createdAt) : null;
-              const dStr = d ? fmt.format(d) : "";
               const cache = translationCache.get(it.id);
               const d = it.createdAt ? new Date(it.createdAt) : null;
               const dStr = d ? fmt.format(d) : "";
