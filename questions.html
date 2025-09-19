@@ -490,41 +490,73 @@
           });
         }
 
-        // === Traduction: détecte NL, puis traduit en FR, avec cache ===
-        async function detectLang(text) {
-          try {
-            const res = await fetch(DETECT_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ q: text }),
-            });
-            const arr = await res.json();
-            // format attendu: [{language:'nl', confidence:0.99}, ...]
-            if (Array.isArray(arr) && arr.length)
-              return arr[0].language || null;
-          } catch (e) {
-            /* ignore */
+        // Utilitaires pour appeler LibreTranslate en form-urlencoded
+        async function postForm(url, params) {
+          const body = new URLSearchParams(params);
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body,
+          });
+          if (!res.ok) {
+            const text = await res.text().catch(() => "");
+            throw new Error(`LT ${url} -> ${res.status} ${text}`);
           }
+          return res.json();
+        }
+
+        // Heuristique locale très simple pour éviter des appels inutiles
+        function looksDutch(text) {
+          if (!text) return false;
+          const s = text.toLowerCase();
+          const hits = [
+            /\bik\b/,
+            /\bniet\b/,
+            /\been\b/,
+            /\bhet\b/,
+            /\bde\b/,
+            /\ben\b/,
+            /\bje\b/,
+            /\bjou\b/,
+            /\bzijn\b/,
+            /\bheb\b/,
+            /\bhebt\b/,
+            /\bmet\b/,
+            /\bvoor\b/,
+            /\bals\b/,
+            /\bmaar\b/,
+            /\bwel\b/,
+            /\bgeen\b/,
+            /\bgoed\b/,
+            /\bdag\b/,
+            /\bhallo\b/,
+            /\bdank\b/,
+            /\balstublieft\b/,
+          ].reduce((acc, rx) => acc + (rx.test(s) ? 1 : 0), 0);
+          return hits >= 2; // ajuste le seuil si besoin
+        }
+
+        async function detectLang(text) {
+          // Petit court-circuit : si ça ne “ressemble pas” au NL, inutile d’appeler l’API
+          if (!looksDutch(text)) return null;
+
+          // LibreTranslate /detect en form-urlencoded
+          const arr = await postForm(DETECT_URL, { q: text });
+          // format: [{ language: 'nl', confidence: 0.99 }, ...]
+          if (Array.isArray(arr) && arr[0]?.language) return arr[0].language;
           return null;
         }
 
         async function translateNLtoFR(text) {
-          try {
-            const res = await fetch(TRANSLATE_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                q: text,
-                source: "nl",
-                target: "fr",
-                format: "text",
-              }),
-            });
-            const data = await res.json();
-            return data?.translatedText || null;
-          } catch (e) {
-            return null;
-          }
+          // LibreTranslate /translate en form-urlencoded
+          const data = await postForm(TRANSLATE_URL, {
+            q: text,
+            source: "nl",
+            target: "fr",
+            format: "text",
+            // api_key: '...'; // si un jour tu utilises une instance qui en exige une
+          });
+          return data?.translatedText || null;
         }
 
         // déclenche les traductions pour les nouvelles entrées
