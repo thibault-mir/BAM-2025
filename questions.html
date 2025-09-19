@@ -510,6 +510,7 @@
           if (!text) return false;
           const s = text.toLowerCase();
           const hits = [
+            // verbes / mots très fréquents
             /\bik\b/,
             /\bniet\b/,
             /\been\b/,
@@ -532,8 +533,18 @@
             /\bhallo\b/,
             /\bdank\b/,
             /\balstublieft\b/,
+
+            // mots de question (ajoutés)
+            /\bwaar\b/,
+            /\bwanneer\b/,
+            /\bhoe\b/,
+            /\bwat\b/,
+            /\bwie\b/,
+            /\bwaarom\b/,
+            /\bwelke\b/,
           ].reduce((acc, rx) => acc + (rx.test(s) ? 1 : 0), 0);
-          return hits >= 2; // ajuste le seuil si besoin
+
+          return hits >= 2; // seuil : au moins 2 mots NL reconnus
         }
 
         async function detectLang(text) {
@@ -561,31 +572,34 @@
 
         // déclenche les traductions pour les nouvelles entrées
         async function kickTranslations() {
-          // limite: pas plus de 3 traductions simultanées pour éviter de spammer l’API
           const queue = [];
           for (const r of rows) {
-            if (translationCache.has(r.id)) continue; // déjà traité
+            if (translationCache.has(r.id)) continue;
             if (!r.question) continue;
 
             queue.push(
               (async () => {
-                const lang = await detectLang(r.question);
-                if (lang === "nl") {
-                  const fr = await translateNLtoFR(r.question);
-                  translationCache.set(r.id, { lang, fr });
-                  filterSortRender(); // maj l’affichage pour cette ligne
-                } else {
-                  translationCache.set(r.id, { lang, fr: null });
+                try {
+                  const lang = await detectLang(r.question);
+                  if (lang === "nl") {
+                    const fr = await translateNLtoFR(r.question);
+                    translationCache.set(r.id, { lang, fr });
+                  } else {
+                    translationCache.set(r.id, {
+                      lang: lang || "other",
+                      fr: null,
+                    });
+                  }
+                  filterSortRender();
+                } catch (e) {
+                  console.debug("LT fail for id", r.id, e?.message || e);
+                  translationCache.set(r.id, { lang: null, fr: null });
                 }
               })()
             );
-            if (queue.length >= 3) break; // on en lance 3 par batch, le reste au prochain refresh
+            if (queue.length >= 3) break;
           }
-          if (queue.length) {
-            try {
-              await Promise.allSettled(queue);
-            } catch {}
-          }
+          if (queue.length) await Promise.allSettled(queue);
         }
 
         function toCSV(items) {
