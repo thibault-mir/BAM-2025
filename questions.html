@@ -163,6 +163,8 @@
               <th data-key="createdAt" class="sortable">Date</th>
               <th data-key="name" class="sortable">Nom</th>
               <th data-key="question" class="sortable">Question</th>
+              <th>Traduction (FR si NL)</th>
+              <!-- NEW -->
               <th data-key="id" class="sortable">ID</th>
             </tr>
           </thead>
@@ -175,7 +177,7 @@
       </div>
     </div>
 
-    <script>
+    <!-- <script>
       (function () {
         const API = "/api/questions"; // chemin absolu
         const tz = "Europe/Brussels";
@@ -342,6 +344,283 @@
           document.addEventListener("DOMContentLoaded", load);
         } else {
           load();
+        }
+      })();
+    </script> -->
+
+    <script>
+      (function () {
+        const API = "/api/questions"; // REST de tes questions
+        const tz = "Europe/Brussels";
+        const fmt = new Intl.DateTimeFormat("fr-BE", {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: tz,
+        });
+
+        // === CONFIG TRADUCTION ===
+        const LT_BASE = "https://libretranslate.com"; // remplace par ton instance si besoin
+        const DETECT_URL = LT_BASE + "/detect";
+        const TRANSLATE_URL = LT_BASE + "/translate";
+
+        // Cache { id -> { lang, fr } }
+        const translationCache = new Map();
+
+        const $ = (sel) => document.querySelector(sel);
+        const tbody = $("#tbody");
+        const q = $("#q");
+        const refreshBtn = $("#refresh");
+        const exportBtn = $("#export");
+        const countEl = $("#count");
+        const statusEl = $("#status");
+        const ths = Array.from(document.querySelectorAll("thead th[data-key]"));
+
+        let rows = []; // toutes les données
+        let view = []; // données filtrées + triées
+        let sortKey = "createdAt";
+        let sortDir = "desc"; // 'asc' | 'desc'
+        let autoTimer = null;
+        let lastLoadedAt = null;
+
+        function escapeHTML(s) {
+          return (s || "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              }[c])
+          );
+        }
+        function setStatus(msg) {
+          statusEl.textContent = msg;
+        }
+
+        async function load() {
+          setStatus("Chargement…");
+          try {
+            const res = await fetch(API, { cache: "no-store" });
+            const text = await res.text();
+            const data = JSON.parse(text);
+            rows = Array.isArray(data) ? data : [];
+            countEl.textContent = rows.length;
+            lastLoadedAt = new Date();
+            setStatus(
+              "MAJ: " +
+                new Intl.DateTimeFormat("fr-BE", {
+                  timeStyle: "medium",
+                }).format(lastLoadedAt)
+            );
+            filterSortRender();
+            // Après rendu, déclenche la traduction des NL non encore traduites
+            kickTranslations();
+          } catch (e) {
+            console.error(e);
+            tbody.innerHTML = `<tr><td colspan="5" class="empty">❌ Erreur de chargement.</td></tr>`;
+            setStatus("Erreur");
+          }
+        }
+
+        function filterSortRender() {
+          const term = q.value.trim().toLowerCase();
+          // filtre
+          view = rows.filter((r) => {
+            const hay = [
+              r.name || "",
+              r.question || "",
+              r.id || "",
+              r.createdAt || "",
+              translationCache.get(r.id)?.fr || "",
+            ]
+              .join(" ")
+              .toLowerCase();
+            return !term || hay.includes(term);
+          });
+
+          // tri
+          view.sort((a, b) => {
+            const A = a[sortKey] ?? "";
+            const B = b[sortKey] ?? "";
+            if (sortKey === "createdAt") {
+              return sortDir === "asc"
+                ? A.localeCompare(B)
+                : B.localeCompare(A);
+            }
+            return sortDir === "asc"
+              ? String(A).toLowerCase().localeCompare(String(B).toLowerCase())
+              : String(B).toLowerCase().localeCompare(String(A).toLowerCase());
+          });
+
+          // render
+          if (!view.length) {
+            tbody.innerHTML = `<tr><td colspan="5" class="empty">Aucune question.</td></tr>`;
+            return;
+          }
+          const html = view
+            .map((it) => {
+              const d = it.createdAt ? new Date(it.createdAt) : null;
+              const dStr = d ? fmt.format(d) : "";
+              const cache = translationCache.get(it.id);
+              const trText = cache?.fr
+                ? escapeHTML(cache.fr)
+                : `<span class="muted">—</span>`;
+              const nlBadge =
+                cache?.lang === "nl" ? ' <span class="pill">NL→FR</span>' : "";
+              return `<tr>
+        <td class="muted">${escapeHTML(dStr)}</td>
+        <td>${escapeHTML(it.name ?? "")}</td>
+        <td>${escapeHTML(it.question ?? "")}</td>
+        <td>${trText}${nlBadge}</td>
+        <td class="mono">${escapeHTML(it.id ?? "")}</td>
+      </tr>`;
+            })
+            .join("");
+          tbody.innerHTML = html;
+
+          // header sort state
+          ths.forEach((th) => {
+            th.classList.remove("sorted-asc", "sorted-desc");
+            if (th.dataset.key === sortKey)
+              th.classList.add(
+                sortDir === "asc" ? "sorted-asc" : "sorted-desc"
+              );
+          });
+        }
+
+        // === Traduction: détecte NL, puis traduit en FR, avec cache ===
+        async function detectLang(text) {
+          try {
+            const res = await fetch(DETECT_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ q: text }),
+            });
+            const arr = await res.json();
+            // format attendu: [{language:'nl', confidence:0.99}, ...]
+            if (Array.isArray(arr) && arr.length)
+              return arr[0].language || null;
+          } catch (e) {
+            /* ignore */
+          }
+          return null;
+        }
+
+        async function translateNLtoFR(text) {
+          try {
+            const res = await fetch(TRANSLATE_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                q: text,
+                source: "nl",
+                target: "fr",
+                format: "text",
+              }),
+            });
+            const data = await res.json();
+            return data?.translatedText || null;
+          } catch (e) {
+            return null;
+          }
+        }
+
+        // déclenche les traductions pour les nouvelles entrées
+        async function kickTranslations() {
+          // limite: pas plus de 3 traductions simultanées pour éviter de spammer l’API
+          const queue = [];
+          for (const r of rows) {
+            if (translationCache.has(r.id)) continue; // déjà traité
+            if (!r.question) continue;
+
+            queue.push(
+              (async () => {
+                const lang = await detectLang(r.question);
+                if (lang === "nl") {
+                  const fr = await translateNLtoFR(r.question);
+                  translationCache.set(r.id, { lang, fr });
+                  filterSortRender(); // maj l’affichage pour cette ligne
+                } else {
+                  translationCache.set(r.id, { lang, fr: null });
+                }
+              })()
+            );
+            if (queue.length >= 3) break; // on en lance 3 par batch, le reste au prochain refresh
+          }
+          if (queue.length) {
+            try {
+              await Promise.allSettled(queue);
+            } catch {}
+          }
+        }
+
+        function toCSV(items) {
+          const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+          const header = ["Date", "Nom", "Question", "Traduction_FR", "ID"];
+          const lines = [header.join(",")];
+          for (const it of items) {
+            const d = it.createdAt ? fmt.format(new Date(it.createdAt)) : "";
+            const tr = translationCache.get(it.id)?.fr || "";
+            lines.push(
+              [
+                esc(d),
+                esc(it.name),
+                esc(it.question),
+                esc(tr),
+                esc(it.id),
+              ].join(",")
+            );
+          }
+          return lines.join("\n");
+        }
+
+        function downloadCSV() {
+          const csv = toCSV(view);
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          const ts = new Date().toISOString().replace(/[:.]/g, "-");
+          a.download = `questions-${ts}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          URL.revokeObjectURL(url);
+          a.remove();
+        }
+
+        // events
+        q.addEventListener("input", filterSortRender);
+        refreshBtn.addEventListener("click", load);
+        exportBtn.addEventListener("click", downloadCSV);
+        ths.forEach((th) => {
+          th.addEventListener("click", () => {
+            const key = th.dataset.key;
+            if (sortKey === key) {
+              sortDir = sortDir === "asc" ? "desc" : "asc";
+            } else {
+              sortKey = key;
+              sortDir = key === "createdAt" ? "desc" : "asc";
+            }
+            filterSortRender();
+          });
+        });
+
+        // init + AUTO-REFRESH 30s
+        function startAutoRefresh() {
+          if (autoTimer) clearInterval(autoTimer);
+          autoTimer = setInterval(load, 30000); // 30s
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () => {
+            load();
+            startAutoRefresh();
+          });
+        } else {
+          load();
+          startAutoRefresh();
         }
       })();
     </script>
