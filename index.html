@@ -1437,18 +1437,19 @@ document.getElementById('qForm').addEventListener('submit', async (e) => {
   const payload = { name: fd.get('name') || '', question: fd.get('question') || '' };
 
   const res = await fetch('/api/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
+const text = await res.text();
+let data;
+try { data = JSON.parse(text); } catch { data = { error: text }; }
 
-  const data = await res.json();
-  if (res.ok) {
-    alert('Merci ! Votre question a été enregistrée.');
-    e.currentTarget.reset();
-  } else {
-    alert('Erreur: ' + (data.error || 'Impossible de soumettre'));
-  }
+if (res.ok) {
+  // succès
+} else {
+  console.error('submit failed:', data.error || text);
+}
 });
 </script>
 
