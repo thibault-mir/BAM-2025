@@ -1328,9 +1328,14 @@
 
   <div class="ms-modal__dialog" role="document">
     <div class="ms-modal__body" style="border-radius: 10px;">
-      <iframe id="msFormFrame"
-        src="https://forms.office.com/Pages/ResponsePage.aspx?id=9k8KzFSUS06IG4X0SN7i40L4WUFzALROviKeCe_mRi9UMFZWN1RPU05VMVNITkNYVDlIUVRRRzhTNS4u&embed=true"
-        style="width:100%;height:100%;border:none;zoom:74%;border-radius: 10px;"></iframe>
+      <div id="msFormFrame"
+        style="width:100%;height:100%;border:none;zoom:74%;border-radius: 10px;">
+        <form id="qForm">
+      <input type="text" name="name" placeholder="Name (optionnel)">
+  <textarea name="question" placeholder="Your Question" required></textarea>
+  <button type="submit" class="btn btn-common btn-lg">Envoyer</button>
+  </form>
+      </div>
     </div>
   </div>
 </div>
@@ -1423,6 +1428,28 @@
     btn.title = open ? 'Réduire' : 'Afficher la météo complète';
   });
 })();
+</script>
+
+<script>
+document.getElementById('qForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.currentTarget);
+  const payload = { name: fd.get('name') || '', question: fd.get('question') || '' };
+
+  const res = await fetch('/api/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert('Merci ! Votre question a été enregistrée.');
+    e.currentTarget.reset();
+  } else {
+    alert('Erreur: ' + (data.error || 'Impossible de soumettre'));
+  }
+});
 </script>
 
 
