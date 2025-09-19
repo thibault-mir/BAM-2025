@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
     if (req.method !== "POST")
       return res.status(405).json({ error: "Use POST" });
 
-    // body safe
+    // Parse body robuste
     let body = req.body;
     if (typeof body === "string") {
       try {
@@ -35,9 +35,8 @@ module.exports = async (req, res) => {
     const question = (body.question || "").trim();
     if (!question) return res.status(400).json({ error: "Question required" });
 
+    // ====== OPTION A (un seul fichier cumulatif) ======
     const PATH = "data/questions.json";
-
-    // lire l'existant
     let records = [];
     try {
       const meta = await head(PATH);
@@ -47,11 +46,8 @@ module.exports = async (req, res) => {
         const parsed = JSON.parse(text);
         if (Array.isArray(parsed)) records = parsed;
       }
-    } catch {
-      /* pas encore créé */
-    }
+    } catch {}
 
-    // ajouter l'entrée
     const entry = {
       id: randomUUID(),
       name: name || null,
@@ -60,15 +56,30 @@ module.exports = async (req, res) => {
     };
     records.push(entry);
 
-    // sauver (IMPORTANT: autoriser l’écrasement du même blob)
-    await put(PATH, JSON.stringify(records, null, 2), {
+    const putResp = await put(PATH, JSON.stringify(records, null, 2), {
       access: "public",
       contentType: "application/json",
       addRandomSuffix: false,
-      allowOverwrite: true, // <- pour garder le même fichier et le mettre à jour
+      allowOverwrite: true,
     });
 
-    return res.status(200).json({ ok: true, entry });
+    // putResp.url = URL publique du blob (si access public)
+    return res.status(200).json({
+      ok: true,
+      entry,
+      recordsCount: records.length,
+      blobUrl: putResp.url,
+    });
+
+    // ====== OPTION B (un fichier par entrée) ======
+    // const entry = { ... };
+    // const putResp = await put(`data/${entry.id}.json`, JSON.stringify(entry, null, 2), {
+    //   access: 'public',
+    //   contentType: 'application/json',
+    //   addRandomSuffix: false,
+    //   allowOverwrite: false,
+    // });
+    // return res.status(200).json({ ok:true, entry, blobUrl: putResp.url });
   } catch (err) {
     console.error("[submit] error:", err);
     return res.status(500).json({ error: "Server error" });

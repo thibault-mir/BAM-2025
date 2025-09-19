@@ -1431,27 +1431,107 @@
 </script>
 
 <script>
-document.getElementById('qForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const fd = new FormData(e.currentTarget);
-  const payload = { name: fd.get('name') || '', question: fd.get('question') || '' };
+(function () {
+  // Attendre que le DOM soit prêt si le script est dans le <head>
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
-  const res = await fetch('/api/submit', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(payload)
-});
-const text = await res.text();
-let data;
-try { data = JSON.parse(text); } catch { data = { error: text }; }
+  function init() {
+    const form = document.getElementById('qForm');
+    if (!form) {
+      console.warn('[qForm] Form not found');
+      return;
+    }
 
-if (res.ok) {
-  // succès
-} else {
-  console.error('submit failed:', data.error || text);
-}
-});
+    const nameInput = form.querySelector('[name="name"]');
+    const qInput    = form.querySelector('[name="question"]');
+    const submitBtn = form.querySelector('[type="submit"]');
+
+    // petite zone de feedback (optionnelle)
+    let feedback = form.querySelector('.q-feedback');
+    if (!feedback) {
+      feedback = document.createElement('div');
+      feedback.className = 'q-feedback';
+      feedback.style.marginTop = '8px';
+      feedback.style.fontSize = '0.95rem';
+      form.appendChild(feedback);
+    }
+
+    form.addEventListener('submit', onSubmit);
+
+    async function onSubmit(e) {
+      e.preventDefault();
+
+      const name = (nameInput?.value || '').trim();
+      const question = (qInput?.value || '').trim();
+
+      // validation minimale côté client
+      if (!question) {
+        showMsg('🛑 Merci d’entrer une question.', true);
+        qInput?.focus();
+        return;
+      }
+
+      // empêcher double clic
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.dataset._oldText = submitBtn.textContent;
+        submitBtn.textContent = 'Envoi...';
+      }
+      showMsg('⏳ Envoi en cours...', false);
+
+      try {
+        const payload = { name, question };
+
+        // IMPORTANT: chemin absolu vers l’API (racine du domaine)
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const raw = await res.text();
+        let data = {};
+        try { data = JSON.parse(raw); } catch { data = { error: raw }; }
+
+        if (!res.ok) {
+          throw new Error(data.error || raw || ('HTTP ' + res.status));
+        }
+
+        // succès
+        showMsg('✅ Merci ! Votre question a bien été enregistrée.', false);
+        // reset champ question uniquement (garde le nom si tu veux)
+        if (qInput) qInput.value = '';
+        // si tu veux tout reset : form.reset();
+
+        // Optional : log/diagnostic
+        console.log('submit response:', data);
+
+      } catch (err) {
+        console.error('submit failed:', err);
+        showMsg('❌ Erreur lors de l’envoi : ' + (err.message || 'inconnue'), true);
+      } finally {
+        // réactiver le bouton
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtn.dataset._oldText || 'Envoyer';
+        }
+      }
+    }
+
+    function showMsg(msg, isError) {
+      if (!feedback) return;
+      feedback.textContent = msg;
+      feedback.style.color = isError ? '#d32f2f' : '#2e7d32';
+      feedback.style.opacity = '1';
+    }
+  }
+})();
 </script>
+
 
 
 <script>
