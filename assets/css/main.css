@@ -2587,7 +2587,8 @@ body.ms-modal-open {
 .floating-btn {
   position: fixed;
   padding: 12px 55px;
-  right: 20px;
+  /* right: 20px; */
+  right: max(var(--ww-gap), env(safe-area-inset-right));
   bottom: var(--btn-bottom);
   z-index: 10000;
 }
