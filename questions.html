@@ -177,177 +177,6 @@
       </div>
     </div>
 
-    <!-- <script>
-      (function () {
-        const API = "/api/questions"; // chemin absolu
-        const tz = "Europe/Brussels";
-        const fmt = new Intl.DateTimeFormat("fr-BE", {
-          dateStyle: "medium",
-          timeStyle: "short",
-          timeZone: tz,
-        });
-
-        const $ = (sel) => document.querySelector(sel);
-        const tbody = $("#tbody");
-        const q = $("#q");
-        const refreshBtn = $("#refresh");
-        const exportBtn = $("#export");
-        const countEl = $("#count");
-        const statusEl = $("#status");
-        const ths = Array.from(document.querySelectorAll("thead th[data-key]"));
-
-        let rows = []; // toutes les données
-        let view = []; // données filtrées + triées
-        let sortKey = "createdAt";
-        let sortDir = "desc"; // 'asc' | 'desc'
-
-        function escapeHTML(s) {
-          return (s || "").replace(
-            /[&<>"']/g,
-            (c) =>
-              ({
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;",
-              }[c])
-          );
-        }
-
-        function setStatus(msg) {
-          statusEl.textContent = msg;
-        }
-
-        async function load() {
-          setStatus("Chargement…");
-          try {
-            const res = await fetch(API, { cache: "no-store" });
-            const text = await res.text();
-            const data = JSON.parse(text);
-            rows = Array.isArray(data) ? data : [];
-            countEl.textContent = rows.length;
-            filterSortRender();
-            setStatus("OK");
-          } catch (e) {
-            console.error(e);
-            tbody.innerHTML = `<tr><td colspan="4" class="empty">❌ Erreur de chargement.</td></tr>`;
-            setStatus("Erreur");
-          }
-        }
-
-        function filterSortRender() {
-          const term = q.value.trim().toLowerCase();
-          // filtre
-          view = rows.filter((r) => {
-            const hay = [
-              r.name || "",
-              r.question || "",
-              r.id || "",
-              r.createdAt || "",
-            ]
-              .join(" ")
-              .toLowerCase();
-            return !term || hay.includes(term);
-          });
-
-          // tri
-          view.sort((a, b) => {
-            const A = a[sortKey] ?? "";
-            const B = b[sortKey] ?? "";
-            if (sortKey === "createdAt") {
-              return sortDir === "asc"
-                ? A.localeCompare(B)
-                : B.localeCompare(A);
-            }
-            // string compare case-insensitive
-            return sortDir === "asc"
-              ? String(A).toLowerCase().localeCompare(String(B).toLowerCase())
-              : String(B).toLowerCase().localeCompare(String(A).toLowerCase());
-          });
-
-          // render
-          if (!view.length) {
-            tbody.innerHTML = `<tr><td colspan="4" class="empty">Aucune question.</td></tr>`;
-            return;
-          }
-          const html = view
-            .map((it) => {
-              const d = it.createdAt ? new Date(it.createdAt) : null;
-              const dStr = d ? fmt.format(d) : "";
-              return `<tr>
-          <td class="muted">${escapeHTML(dStr)}</td>
-          <td>${escapeHTML(it.name ?? "")}</td>
-          <td>${escapeHTML(it.question ?? "")}</td>
-          <td class="mono">${escapeHTML(it.id ?? "")}</td>
-        </tr>`;
-            })
-            .join("");
-          tbody.innerHTML = html;
-
-          // header sort state
-          ths.forEach((th) => {
-            th.classList.remove("sorted-asc", "sorted-desc");
-            if (th.dataset.key === sortKey)
-              th.classList.add(
-                sortDir === "asc" ? "sorted-asc" : "sorted-desc"
-              );
-          });
-        }
-
-        function toCSV(items) {
-          const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-          const header = ["Date", "Nom", "Question", "ID"];
-          const lines = [header.join(",")];
-          for (const it of items) {
-            const d = it.createdAt ? fmt.format(new Date(it.createdAt)) : "";
-            lines.push(
-              [esc(d), esc(it.name), esc(it.question), esc(it.id)].join(",")
-            );
-          }
-          return lines.join("\n");
-        }
-
-        function downloadCSV() {
-          const csv = toCSV(view);
-          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          const ts = new Date().toISOString().replace(/[:.]/g, "-");
-          a.download = `questions-${ts}.csv`;
-          document.body.appendChild(a);
-          a.click();
-          URL.revokeObjectURL(url);
-          a.remove();
-        }
-
-        // events
-        q.addEventListener("input", filterSortRender);
-        refreshBtn.addEventListener("click", load);
-        exportBtn.addEventListener("click", downloadCSV);
-        ths.forEach((th) => {
-          th.addEventListener("click", () => {
-            const key = th.dataset.key;
-            if (sortKey === key) {
-              sortDir = sortDir === "asc" ? "desc" : "asc";
-            } else {
-              sortKey = key;
-              sortDir = key === "createdAt" ? "desc" : "asc";
-            }
-            filterSortRender();
-          });
-        });
-
-        // init
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", load);
-        } else {
-          load();
-        }
-      })();
-    </script> -->
-
     <script>
       (function () {
         const API = "/api/questions"; // REST de tes questions
@@ -580,24 +409,26 @@
             queue.push(
               (async () => {
                 try {
-                  const lang = await detectLang(r.question);
-                  if (lang === "nl") {
-                    const fr = await translateNLtoFR(r.question);
-                    translationCache.set(r.id, { lang, fr });
-                  } else {
-                    translationCache.set(r.id, {
-                      lang: lang || "other",
-                      fr: null,
-                    });
-                  }
+                  const res = await fetch("/api/translate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: r.question }),
+                  });
+                  const out = await res.json().catch(() => ({}));
+                  // out: { lang, fr }
+                  translationCache.set(r.id, {
+                    lang: out.lang || null,
+                    fr: out.fr || null,
+                  });
                   filterSortRender();
                 } catch (e) {
-                  console.debug("LT fail for id", r.id, e?.message || e);
+                  console.debug("translate fail for id", r.id, e?.message || e);
                   translationCache.set(r.id, { lang: null, fr: null });
                 }
               })()
             );
-            if (queue.length >= 3) break;
+
+            if (queue.length >= 3) break; // on limite 3 en parallèle
           }
           if (queue.length) await Promise.allSettled(queue);
         }
