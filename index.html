@@ -1436,7 +1436,7 @@ document.getElementById('qForm').addEventListener('submit', async (e) => {
   const fd = new FormData(e.currentTarget);
   const payload = { name: fd.get('name') || '', question: fd.get('question') || '' };
 
-  const res = await fetch('assets/api/submit', {
+  const res = await fetch('/api/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
