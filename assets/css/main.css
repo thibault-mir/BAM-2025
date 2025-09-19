@@ -2602,3 +2602,81 @@ body.ms-modal-open {
   bottom: var(--btn-bottom);
   z-index: 10000;
 }
+
+/* Modal skeleton */
+.ms-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+.ms-modal.is-open {
+  display: block;
+}
+.ms-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.ms-modal__dialog {
+  position: relative;
+  max-width: 520px;
+  margin: 6% auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: modalIn 0.25s ease;
+}
+@keyframes modalIn {
+  from {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.ms-modal__body {
+  position: relative;
+  padding: 24px;
+}
+.ms-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #999;
+}
+.ms-modal__close:hover {
+  color: #333;
+}
+
+/* Overlay loader .lottie */
+.q-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.66);
+  backdrop-filter: blur(3px);
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+.q-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.q-loader p {
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+}
