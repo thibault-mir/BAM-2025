@@ -163,7 +163,7 @@
               <th data-key="createdAt" class="sortable">Date</th>
               <th data-key="name" class="sortable">Nom</th>
               <th data-key="question" class="sortable">Question</th>
-              <th>Traduction (FR si NL)</th>
+              <th>Traduction</th>
             </tr>
           </thead>
           <tbody id="tbody">
@@ -175,7 +175,7 @@
       </div>
     </div>
 
-    <script>
+    <!-- <script>
       (function () {
         const API = "/api/questions"; // REST de tes questions
         const tz = "Europe/Brussels";
@@ -498,6 +498,301 @@
           load();
           startAutoRefresh();
         }
+      })();
+    </script> -->
+
+    <script>
+      (function () {
+        const API = "/api/questions";
+        const tz = "Europe/Brussels";
+        const fmt = new Intl.DateTimeFormat("fr-BE", {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: tz,
+        });
+
+        // --- Cache persistant pour traductions
+        const LS_KEY = "qTranslationCacheV1";
+        const translationCache = new Map();
+        try {
+          const saved = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+          for (const [k, v] of Object.entries(saved))
+            translationCache.set(k, v);
+        } catch {}
+
+        const $ = (sel) => document.querySelector(sel);
+        const tbody = $("#tbody");
+        const q = $("#q");
+        const refreshBtn = $("#refresh");
+        const exportBtn = $("#export");
+        const countEl = $("#count");
+        const statusEl = $("#status");
+        const ths = Array.from(document.querySelectorAll("thead th[data-key]"));
+
+        let rows = []; // toutes les données
+        let view = []; // données filtrées + triées
+        let sortKey = "createdAt";
+        let sortDir = "desc"; // 'asc' | 'desc'
+        let lastLoadedAt = null;
+
+        function escapeHTML(s) {
+          return (s || "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              }[c])
+          );
+        }
+        function setStatus(msg) {
+          statusEl.textContent = msg;
+        }
+
+        async function load() {
+          setStatus("Chargement…");
+          try {
+            const res = await fetch(API, { cache: "no-store" });
+            const text = await res.text();
+            const data = JSON.parse(text);
+            rows = Array.isArray(data) ? data : [];
+            countEl.textContent = rows.length;
+            lastLoadedAt = new Date();
+            setStatus(
+              "MAJ: " +
+                new Intl.DateTimeFormat("fr-BE", {
+                  timeStyle: "medium",
+                }).format(lastLoadedAt)
+            );
+            filterSortRender();
+            // Lance les traductions nécessaires (uniquement NL, et pas celles déjà en cache)
+            kickTranslations();
+          } catch (e) {
+            console.error(e);
+            tbody.innerHTML = `<tr><td colspan="4" class="empty">❌ Erreur de chargement.</td></tr>`;
+            setStatus("Erreur");
+          }
+        }
+
+        function filterSortRender() {
+          const term = q.value.trim().toLowerCase();
+
+          // filtre (sans ID)
+          view = rows.filter((r) => {
+            const hay = [
+              r.name || "",
+              r.question || "",
+              r.createdAt || "",
+              translationCache.get(r.id)?.fr || "",
+            ]
+              .join(" ")
+              .toLowerCase();
+            return !term || hay.includes(term);
+          });
+
+          // tri
+          view.sort((a, b) => {
+            const A = a[sortKey] ?? "";
+            const B = b[sortKey] ?? "";
+            if (sortKey === "createdAt") {
+              return sortDir === "asc"
+                ? A.localeCompare(B)
+                : B.localeCompare(A);
+            }
+            return sortDir === "asc"
+              ? String(A).toLowerCase().localeCompare(String(B).toLowerCase())
+              : String(B).toLowerCase().localeCompare(String(A).toLowerCase());
+          });
+
+          // rendu
+          if (!view.length) {
+            tbody.innerHTML = `<tr><td colspan="4" class="empty">Aucune question.</td></tr>`;
+            return;
+          }
+
+          const html = view
+            .map((it) => {
+              const dStr = it.createdAt
+                ? fmt.format(new Date(it.createdAt))
+                : "";
+              const cache = translationCache.get(it.id);
+              const trText = cache?.fr
+                ? escapeHTML(cache.fr)
+                : `<span class="muted">—</span>`;
+              const nlBadge =
+                cache?.lang === "nl" && cache?.fr
+                  ? ' <span class="pill">NL→FR</span>'
+                  : "";
+              const langBadge = cache?.lang
+                ? ` <span class="pill">[${escapeHTML(cache.lang)}]</span>`
+                : "";
+              return `<tr>
+        <td class="muted">${escapeHTML(dStr)}</td>
+        <td>${escapeHTML(it.name ?? "")}</td>
+        <td>${escapeHTML(it.question ?? "")}</td>
+        <td>${trText}${nlBadge}${langBadge}</td>
+      </tr>`;
+            })
+            .join("");
+
+          tbody.innerHTML = html;
+
+          // état tri header
+          ths.forEach((th) => {
+            th.classList.remove("sorted-asc", "sorted-desc");
+            if (th.dataset.key === sortKey)
+              th.classList.add(
+                sortDir === "asc" ? "sorted-asc" : "sorted-desc"
+              );
+          });
+        }
+
+        // --- Heuristique NL locale : déclenche la traduction seulement si ça ressemble au néerlandais
+        function looksDutch(text) {
+          if (!text) return false;
+          const s = text.toLowerCase();
+          const rx = [
+            // mots interrogatifs NL
+            /\bwaar\b/,
+            /\bwanneer\b/,
+            /\bhoe\b/,
+            /\bwat\b/,
+            /\bwie\b/,
+            /\bwaarom\b/,
+            /\bwelke\b/,
+            // mots fonctionnels fréquents
+            /\bik\b/,
+            /\bniet\b/,
+            /\been\b/,
+            /\bhet\b/,
+            /\bde\b/,
+            /\ben\b/,
+            /\bje\b/,
+            /\bjou\b/,
+            /\bzijn\b/,
+            /\bheb\b/,
+            /\bhebt\b/,
+            /\bmet\b/,
+            /\bvoor\b/,
+            /\bals\b/,
+            /\bmaar\b/,
+            /\bwel\b/,
+            /\bgeen\b/,
+            /\bgoed\b/,
+            /\bdag\b/,
+            /\bhallo\b/,
+            /\bdank\b/,
+            /\balstublieft\b/,
+          ];
+          let hits = 0;
+          for (const r of rx) if (r.test(s)) hits++;
+          return hits >= 2;
+        }
+
+        // --- Traductions (via ton backend /api/translate)
+        async function kickTranslations() {
+          const queue = [];
+          for (const r of rows) {
+            if (translationCache.has(r.id)) continue;
+            if (!r.question) continue;
+
+            // ne traduit que si NL probable (économise les requêtes)
+            if (!looksDutch(r.question)) {
+              translationCache.set(r.id, { lang: "other", fr: null });
+              continue;
+            }
+
+            queue.push(
+              (async () => {
+                try {
+                  const res = await fetch("/api/translate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: r.question }),
+                  });
+                  const out = await res.json().catch(() => ({}));
+                  translationCache.set(r.id, {
+                    lang: out.lang || "nl",
+                    fr: out.fr || null,
+                  });
+                  filterSortRender();
+                } catch (e) {
+                  console.debug("translate fail for id", r.id, e?.message || e);
+                  translationCache.set(r.id, { lang: "nl", fr: null });
+                }
+              })()
+            );
+
+            if (queue.length >= 3) break; // limite 3 en parallèle
+          }
+
+          if (queue.length) {
+            await Promise.allSettled(queue);
+            // Sauvegarde le cache en localStorage
+            try {
+              const obj = Object.fromEntries(translationCache.entries());
+              localStorage.setItem(LS_KEY, JSON.stringify(obj));
+            } catch {}
+          }
+        }
+
+        // Export CSV (sans ID)
+        function toCSV(items) {
+          const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+          const header = ["Date", "Nom", "Question", "Traduction_FR"];
+          const lines = [header.join(",")];
+          for (const it of items) {
+            const d = it.createdAt ? fmt.format(new Date(it.createdAt)) : "";
+            const tr = translationCache.get(it.id)?.fr || "";
+            lines.push(
+              [esc(d), esc(it.name), esc(it.question), esc(tr)].join(",")
+            );
+          }
+          return lines.join("\n");
+        }
+        function downloadCSV() {
+          const csv = toCSV(view);
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          const ts = new Date().toISOString().replace(/[:.]/g, "-");
+          a.download = `questions-${ts}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          URL.revokeObjectURL(url);
+          a.remove();
+        }
+
+        // events
+        q.addEventListener("input", filterSortRender);
+        refreshBtn.addEventListener("click", load);
+        exportBtn.addEventListener("click", downloadCSV);
+        ths.forEach((th) => {
+          th.addEventListener("click", () => {
+            const key = th.dataset.key;
+            if (sortKey === key) {
+              sortDir = sortDir === "asc" ? "desc" : "asc";
+            } else {
+              sortKey = key;
+              sortDir = key === "createdAt" ? "desc" : "asc";
+            }
+            filterSortRender();
+          });
+        });
+
+        // init (❌ plus d'auto-refresh 30s)
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", load);
+        } else {
+          load();
+        }
+
+        // (option) util pour réinitialiser le cache dans la console :
+        // localStorage.removeItem('qTranslationCacheV1');
       })();
     </script>
   </body>
