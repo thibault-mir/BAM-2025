@@ -185,11 +185,6 @@
           timeZone: tz,
         });
 
-        // === CONFIG TRADUCTION ===
-        const LT_BASE = "https://libretranslate.com"; // remplace par ton instance si besoin
-        const DETECT_URL = LT_BASE + "/detect";
-        const TRANSLATE_URL = LT_BASE + "/translate";
-
         // Cache { id -> { lang, fr } }
         const translationCache = new Map();
 
@@ -255,10 +250,10 @@
           const term = q.value.trim().toLowerCase();
           // filtre
           view = rows.filter((r) => {
+            // haystack sans id
             const hay = [
               r.name || "",
               r.question || "",
-              r.id || "",
               r.createdAt || "",
               translationCache.get(r.id)?.fr || "",
             ]
@@ -283,7 +278,7 @@
 
           // render
           if (!view.length) {
-            tbody.innerHTML = `<tr><td colspan="5" class="empty">Aucune question.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="empty">Aucune question.</td></tr>`;
             return;
           }
           const html = view
@@ -291,18 +286,25 @@
               const d = it.createdAt ? new Date(it.createdAt) : null;
               const dStr = d ? fmt.format(d) : "";
               const cache = translationCache.get(it.id);
+              const d = it.createdAt ? new Date(it.createdAt) : null;
+              const dStr = d ? fmt.format(d) : "";
               const trText = cache?.fr
                 ? escapeHTML(cache.fr)
                 : `<span class="muted">—</span>`;
               const nlBadge =
-                cache?.lang === "nl" ? ' <span class="pill">NL→FR</span>' : "";
+                cache?.lang === "nl" && cache?.fr
+                  ? ' <span class="pill">NL→FR</span>'
+                  : "";
+              const langBadge = cache?.lang
+                ? ` <span class="pill">[${escapeHTML(cache.lang)}]</span>`
+                : "";
+
               return `<tr>
-        <td class="muted">${escapeHTML(dStr)}</td>
-        <td>${escapeHTML(it.name ?? "")}</td>
-        <td>${escapeHTML(it.question ?? "")}</td>
-        <td>${trText}${nlBadge}</td>
-        <td class="mono">${escapeHTML(it.id ?? "")}</td>
-      </tr>`;
+  <td class="muted">${escapeHTML(dStr)}</td>
+  <td>${escapeHTML(it.name ?? "")}</td>
+  <td>${escapeHTML(it.question ?? "")}</td>
+  <td>${trText}${nlBadge}${langBadge}</td>
+</tr>`;
             })
             .join("");
           tbody.innerHTML = html;
@@ -413,11 +415,12 @@
                     body: JSON.stringify({ text: r.question }),
                   });
                   const out = await res.json().catch(() => ({}));
-                  // out: { lang, fr }
+                  // out: { lang, fr, note? }
                   translationCache.set(r.id, {
                     lang: out.lang || null,
                     fr: out.fr || null,
                   });
+                  console.debug("translate out", r.id, out); // <— debug utile
                   filterSortRender();
                 } catch (e) {
                   console.debug("translate fail for id", r.id, e?.message || e);
@@ -426,7 +429,7 @@
               })()
             );
 
-            if (queue.length >= 3) break; // on limite 3 en parallèle
+            if (queue.length >= 3) break;
           }
           if (queue.length) await Promise.allSettled(queue);
         }
