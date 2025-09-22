@@ -1112,6 +1112,12 @@ a.back-to-top:focus {
   margin-bottom: 8px;
 }
 
+@media (max-width: 425px) {
+  .schedule .card-header .name {
+    font-size: 11px !important;
+  }
+}
+
 .schedule .card-header .name {
   position: relative;
   font-size: 14px;
