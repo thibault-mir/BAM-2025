@@ -2609,7 +2609,6 @@ body.ms-modal-open {
   right: max(var(--ww-gap), env(safe-area-inset-right));
   bottom: var(--btn-bottom);
   z-index: 10000;
-  font-size: 16px; /* taille par défaut */
 }
 
 /* sur smartphone (max ~768px) → bouton plus gros */
