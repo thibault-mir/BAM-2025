@@ -2594,13 +2594,31 @@ body.ms-modal-open {
   overflow: hidden;
 }
 
-.floating-btn {
+/* .floating-btn {
   position: fixed;
   padding: 12px 55px;
-  /* right: 20px; */
   right: max(var(--ww-gap), env(safe-area-inset-right));
   bottom: var(--btn-bottom);
   z-index: 10000;
+} */
+
+/* bouton flottant normal (déjà défini) */
+.floating-btn {
+  position: fixed;
+  padding: 12px 55px;
+  right: max(var(--ww-gap), env(safe-area-inset-right));
+  bottom: var(--btn-bottom);
+  z-index: 10000;
+  font-size: 16px; /* taille par défaut */
+}
+
+/* sur smartphone (max ~768px) → bouton plus gros */
+@media (max-width: 480px) {
+  a.btn.floating-btn {
+    padding: 16px 65px !important;
+    font-size: 18px !important;
+    border-radius: 10px !important;
+  }
 }
 
 /* Modal skeleton */
