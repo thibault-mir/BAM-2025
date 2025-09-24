@@ -7,12 +7,13 @@ module.exports = async (req, res) => {
     const pollId = (url.searchParams.get("pollId") || "").trim();
     if (!pollId) return res.status(400).json({ error: "pollId required" });
 
+    const prefix = `data/votes/${pollId}/`;
     const counts = {};
-    let total = 0;
-    let cursor;
+    let total = 0,
+      cursor;
 
     do {
-      const resp = await list({ prefix: `votes/${pollId}/entries/`, cursor });
+      const resp = await list({ prefix, cursor });
       for (const b of resp.blobs) {
         if (!b.pathname.endsWith(".json")) continue;
         const { body } = await get(b.pathname);
@@ -20,7 +21,8 @@ module.exports = async (req, res) => {
         for await (const ch of body) chunks.push(Buffer.from(ch));
         try {
           const v = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-          counts[v.choice] = (counts[v.choice] || 0) + 1;
+          const c = String(v.choice || "");
+          counts[c] = (counts[c] || 0) + 1;
           total++;
         } catch {}
       }

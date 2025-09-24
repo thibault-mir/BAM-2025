@@ -2952,23 +2952,11 @@
 
 <script>
 (function(){
-  //const POLL_ID = 'bam-2025-films';      // ← change le slug si tu veux
-  const POLL_ID = 'bam-2025-films-v2'; // nouveau pollId
-
-  const LS_DEVICE = 'device_id';
-  const LS_VOTED  = `poll_${POLL_ID}_voted`;
-
-  // Génère / récupère un deviceId persistant (LS + cookie backup)
-  let deviceId = localStorage.getItem(LS_DEVICE);
-  if (!deviceId) {
-    deviceId = (crypto.randomUUID && crypto.randomUUID()) || Math.random().toString(36).slice(2);
-    localStorage.setItem(LS_DEVICE, deviceId);
-    document.cookie = `device_id=${deviceId}; path=/; max-age=${60*60*24*365}`;
-  }
+  const POLL_ID = 'bam-2025-films-new'; // change si besoin
+  const delay = (ms)=> new Promise(r=>setTimeout(r, ms));
 
   const form = document.getElementById('voteForm');
   const msg  = document.getElementById('voteMsg');
-
   if (!form) return;
 
   function setMsg(t, ok){
@@ -2977,46 +2965,42 @@
     msg.style.fontSize = '.95rem';
     msg.style.color = ok ? '#2e7d32' : '#d32f2f';
   }
-  function lockUI(){
-    form.querySelectorAll('input,button').forEach(el => el.disabled = true);
-  }
-
-  // Si déjà voté sur ce device (local), on bloque l’UI
-  if (localStorage.getItem(LS_VOTED) === '1') {
-    lockUI();
-    setMsg('✅ Vote déjà enregistré sur cet appareil.', true);
+  function lockUI(disabled=true){
+    form.querySelectorAll('input,button').forEach(el => el.disabled = disabled);
   }
 
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const fd = new FormData(form);
     const choice = (fd.get('choice') || '').trim(); // "1".."11"
-    if (!choice) { setMsg('🛑 Choisis un film avant d’envoyer.', false); return; }
+    if (!choice) { setMsg('🛑 Choisis un film.', false); return; }
+
+    lockUI(true);
+    setMsg('⏳ Envoi en cours…', true);
+    const minShow = delay(1200);
 
     try {
+      const payload = { pollId: POLL_ID, choice };
       const res = await fetch('/api/vote', {
         method:'POST',
         headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ pollId: POLL_ID, choice, deviceId })
+        body: JSON.stringify(payload),
       });
-      const text = await res.text();
-      let data = {}; try { data = JSON.parse(text) } catch {}
 
-      if (res.status === 409) {
-        setMsg('🙅 Tu as déjà voté depuis cet appareil.', false);
-        lockUI();
-        localStorage.setItem(LS_VOTED, '1');
-        return;
-      }
-      if (!res.ok) throw new Error(data.error || text || ('HTTP '+res.status));
+      const raw = await res.text();
+      let data = {}; try { data = JSON.parse(raw); } catch { data = { error: raw }; }
+
+      await minShow;
+
+      if (!res.ok) throw new Error(data.error || raw || ('HTTP '+res.status));
 
       setMsg('✅ Merci ! Ton vote est comptabilisé.', true);
-      lockUI();
-      localStorage.setItem(LS_VOTED, '1');
+      lockUI(true);
 
     } catch (err) {
       console.error('[vote] submit error:', err);
-      setMsg('❌ Erreur pendant l’envoi : ' + (err.message || 'inconnue'), false);
+      setMsg('❌ Erreur : ' + (err.message || 'inconnue'), false);
+      lockUI(false);
     }
   });
 })();
