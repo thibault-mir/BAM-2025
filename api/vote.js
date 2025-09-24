@@ -3,66 +3,65 @@ const { randomUUID } = require("crypto");
 
 module.exports = async (req, res) => {
   try {
-    const { put } = await import("@vercel/blob");
+    const { put, head } = await import("@vercel/blob");
 
-    // CORS minimal
-    if (req.method === "OPTIONS") {
-      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      return res.status(200).end();
-    }
-    res.setHeader("Access-Control-Allow-Origin", "*");
-
-    if (req.method !== "POST") {
+    if (req.method !== "POST")
       return res.status(405).json({ error: "Use POST" });
-    }
 
-    // Parse body
     let body = req.body;
-    if (typeof body === "string") {
-      try {
-        body = JSON.parse(body);
-      } catch {
-        body = {};
+    if (typeof body === "string") body = JSON.parse(body || "{}");
+    const pollId = body.pollId?.trim();
+    const choice = body.choice?.trim();
+    const deviceId = body.deviceId?.trim();
+
+    if (!pollId || !choice || !deviceId)
+      return res
+        .status(400)
+        .json({ error: "pollId, choice, deviceId required" });
+
+    // === Check si déjà voté ===
+    const markerPath = `data/votes/${pollId}/devices/${deviceId}.json`;
+    try {
+      // si le fichier existe déjà → déjà voté
+      await head(markerPath);
+      return res.status(409).json({ error: "already_voted" });
+    } catch {
+      // pas trouvé → OK pour voter
+    }
+
+    // 1) Crée le marqueur device
+    await put(
+      markerPath,
+      JSON.stringify({ pollId, choice, at: new Date().toISOString() }),
+      {
+        access: "private",
+        contentType: "application/json",
+        addRandomSuffix: false,
+        allowOverwrite: false,
       }
-    }
-    const pollId = (body?.pollId || "").trim();
-    const choice = (body?.choice || "").trim(); // ex: "1".."11"
-    if (!pollId || !choice) {
-      return res.status(400).json({ error: "pollId and choice required" });
-    }
-
-    // (facultatif) whitelist
-    const allowed = new Set(
-      Array.from({ length: 11 }, (_, i) => String(i + 1))
     );
-    if (!allowed.has(choice)) {
-      return res.status(400).json({ error: "invalid choice" });
-    }
 
-    // Un blob par vote (append-only)
+    // 2) Sauvegarde le vote append-only
     const entry = {
       id: randomUUID(),
       pollId,
       choice,
+      deviceId,
       createdAt: new Date().toISOString(),
     };
-
-    // clé horodatée pour tri naturel
-    const key = `data/votes/${pollId}/${entry.createdAt.replace(
+    const key = `data/votes/${pollId}/entries/${entry.createdAt.replace(
       /[:.]/g,
       "-"
     )}-${entry.id}.json`;
 
-    const putResp = await put(key, JSON.stringify(entry, null, 2), {
-      access: "public", // ou "private" si tu préfères
+    await put(key, JSON.stringify(entry, null, 2), {
+      access: "private",
       contentType: "application/json",
       addRandomSuffix: false,
-      allowOverwrite: false, // jamais d’écrasement
+      allowOverwrite: false,
     });
 
-    return res.status(200).json({ ok: true, entry, blobUrl: putResp.url });
+    return res.status(201).json({ ok: true });
   } catch (e) {
     console.error("[vote] error:", e);
     return res.status(500).json({ error: "Server error" });
