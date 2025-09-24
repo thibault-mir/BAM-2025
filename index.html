@@ -2839,11 +2839,18 @@
 <a
   id="floatAction"
   href="#"
+  class="btn btn-common btn-lg floating-btn"
+>
+  VOTE NOW
+</a>
+<!-- <a
+  id="floatAction"
+  href="#"
   target="_blank"
   class="btn btn-common btn-lg floating-btn"
 >
   SUBMIT YOUR QUESTION
-</a>
+</a> -->
 <div class="weather-float ww-collapsed" id="weatherBox">
   <button class="ww-toggle" id="wwToggle" aria-expanded="false" aria-controls="weatherBox" title="Afficher la météo complète">
     ▲
@@ -2885,7 +2892,7 @@
 <!-- ... dans ton modal -->
 
 <!-- Le MODAL (wrapper complet + backdrop + dialog) -->
-<div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="msFormTitle">
+<!-- <div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="msFormTitle">
   <div class="ms-modal__backdrop" data-close="true"></div>
 
   <div class="ms-modal__dialog" role="document">
@@ -2893,7 +2900,7 @@
       <button type="button" class="ms-modal__close" data-close="true" aria-label="Fermer">&times;</button>
       <h2 id="msFormTitle">Submit your question</h2>
 
-      <!-- OVERLAY LOADER -->
+      
       <div id="qLoader" class="q-loader hidden" aria-hidden="true">
         <dotlottie-player
           src="/assets/lottie/spongebob.lottie" 
@@ -2906,7 +2913,7 @@
         <p>Envoi de ta question en cours…</p>
       </div>
 
-      <!-- Le formulaire -->
+      
       <form id="qForm" class="ms-form">
         <input type="text" name="name" placeholder="Name (optional)">
         <textarea name="question" placeholder="Your question..." required></textarea>
@@ -2914,7 +2921,104 @@
       </form>
     </div>
   </div>
+</div> -->
+
+
+
+<!-- modal -->
+<div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="ms-modal__backdrop" data-close="true"></div>
+  <div class="ms-modal__dialog" role="document">
+    <div class="ms-modal__body">
+      <h2>Vote</h2>
+      <form id="voteForm">
+        <label><input type="radio" name="choice" value="1" required>Film 1</label><br>
+        <label><input type="radio" name="choice" value="2">Film 2</label><br>
+        <label><input type="radio" name="choice" value="3">Film 3</label><br>
+        <label><input type="radio" name="choice" value="4" required>Film 4</label><br>
+        <label><input type="radio" name="choice" value="5">Film 5</label><br>
+        <label><input type="radio" name="choice" value="6">Film 6</label><br>
+        <label><input type="radio" name="choice" value="7" required>Film 7</label><br>
+        <label><input type="radio" name="choice" value="8">Film 8</label><br>
+        <label><input type="radio" name="choice" value="9">Film 9</label><br>
+        <label><input type="radio" name="choice" value="10">Film 10</label><br>
+        <label><input type="radio" name="choice" value="11">Film 11</label><br>
+        <button type="submit" class="btn btn-common btn-lg">Envoyer le vote</button>
+      </form>
+      <div id="voteMsg"></div>
+    </div>
+  </div>
 </div>
+
+<script>
+(function(){
+  const POLL_ID = 'bam-2025-films';      // ← change le slug si tu veux
+  const LS_DEVICE = 'device_id';
+  const LS_VOTED  = `poll_${POLL_ID}_voted`;
+
+  // Génère / récupère un deviceId persistant (LS + cookie backup)
+  let deviceId = localStorage.getItem(LS_DEVICE);
+  if (!deviceId) {
+    deviceId = (crypto.randomUUID && crypto.randomUUID()) || Math.random().toString(36).slice(2);
+    localStorage.setItem(LS_DEVICE, deviceId);
+    document.cookie = `device_id=${deviceId}; path=/; max-age=${60*60*24*365}`;
+  }
+
+  const form = document.getElementById('voteForm');
+  const msg  = document.getElementById('voteMsg');
+
+  if (!form) return;
+
+  function setMsg(t, ok){
+    msg.textContent = t;
+    msg.style.marginTop = '8px';
+    msg.style.fontSize = '.95rem';
+    msg.style.color = ok ? '#2e7d32' : '#d32f2f';
+  }
+  function lockUI(){
+    form.querySelectorAll('input,button').forEach(el => el.disabled = true);
+  }
+
+  // Si déjà voté sur ce device (local), on bloque l’UI
+  if (localStorage.getItem(LS_VOTED) === '1') {
+    lockUI();
+    setMsg('✅ Vote déjà enregistré sur cet appareil.', true);
+  }
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const fd = new FormData(form);
+    const choice = (fd.get('choice') || '').trim(); // "1".."11"
+    if (!choice) { setMsg('🛑 Choisis un film avant d’envoyer.', false); return; }
+
+    try {
+      const res = await fetch('/api/vote', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ pollId: POLL_ID, choice, deviceId })
+      });
+      const text = await res.text();
+      let data = {}; try { data = JSON.parse(text) } catch {}
+
+      if (res.status === 409) {
+        setMsg('🙅 Tu as déjà voté depuis cet appareil.', false);
+        lockUI();
+        localStorage.setItem(LS_VOTED, '1');
+        return;
+      }
+      if (!res.ok) throw new Error(data.error || text || ('HTTP '+res.status));
+
+      setMsg('✅ Merci ! Ton vote est comptabilisé.', true);
+      lockUI();
+      localStorage.setItem(LS_VOTED, '1');
+
+    } catch (err) {
+      console.error('[vote] submit error:', err);
+      setMsg('❌ Erreur pendant l’envoi : ' + (err.message || 'inconnue'), false);
+    }
+  });
+})();
+</script>
 
 
 
@@ -3349,60 +3453,6 @@
       window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
     <script defer src="/_vercel/insights/script.js?v=1"></script>
-
-    <!-- <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const select = document.getElementById("teamFilter");
-
-        function filterCards() {
-          const selectedGroup = select.value;
-          const tabPanes = document.querySelectorAll(".tab-pane");
-
-          tabPanes.forEach((pane) => {
-            const cards = pane.querySelectorAll(".card");
-            cards.forEach((card) => {
-              const groups = (card.getAttribute("data-group") || "").split(" ");
-              if (selectedGroup === "teamselect") {
-                card.style.display = groups.includes("teamselect") ? "" : "none";
-              } else {
-                card.style.display = groups.includes(selectedGroup) ? "" : "none";
-              }
-            });
-          });
-        }
-
-        select.addEventListener("change", filterCards);
-
-        const tabs = document.querySelectorAll('#myTab a[data-toggle="tab"]');
-        tabs.forEach((tab) => {
-          tab.addEventListener("shown.bs.tab", function (event) {
-            filterCards(); // filtre à chaque tab switch
-
-            // Scroll uniquement sur mobile
-            if (window.innerWidth <= 767) {
-              const targetSelector = tab.getAttribute("href");
-              const targetPane = document.querySelector(targetSelector);
-
-              if (targetPane) {
-                // Petit timeout pour laisser le DOM s'ajuster
-                setTimeout(() => {
-                  const rect = targetPane.getBoundingClientRect();
-                  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                  const offset = rect.top + scrollTop; // ajuster ici selon hauteur navbar
-                  console.log("Scroll vers", targetPane.id);
-                  window.scrollTo({
-                    top: offset,
-                    behavior: "smooth",
-                  });
-                }, 300); // délai un peu plus long pour Bootstrap
-              }
-            }
-          });
-        });
-
-        filterCards(); // appel initial
-      });
-    </script> -->
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
