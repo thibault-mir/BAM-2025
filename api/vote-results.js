@@ -1,7 +1,7 @@
 // api/vote-results.js
 module.exports = async (req, res) => {
   try {
-    const { list, get } = await import("@vercel/blob");
+    const { list, head } = await import("@vercel/blob");
 
     const url = new URL(req.url, "http://local");
     const pollId = (url.searchParams.get("pollId") || "").trim();
@@ -13,16 +13,9 @@ module.exports = async (req, res) => {
       files = 0,
       cursor;
 
-    async function streamToString(stream) {
-      const chunks = [];
-      for await (const ch of stream) chunks.push(Buffer.from(ch));
-      return Buffer.concat(chunks).toString("utf8");
-    }
-
-    const getChoice = (v) => {
+    const pickChoice = (v) => {
       const c = v?.choice ?? v?.vote ?? v?.selected ?? v?.value ?? "";
-      const s = (typeof c === "number" ? String(c) : String(c)).trim();
-      return s;
+      return (typeof c === "number" ? String(c) : String(c)).trim();
     };
 
     do {
@@ -31,11 +24,14 @@ module.exports = async (req, res) => {
         if (!b.pathname.endsWith(".json")) continue;
         files++;
         try {
-          const { body } = await get(b.pathname);
-          const text = await streamToString(body);
-          const v = JSON.parse(text);
-          const c = getChoice(v);
+          const meta = await head(b.pathname);
+          const r = await fetch(meta.url); // <-- lire le contenu
+          const txt = await r.text();
+          const json = JSON.parse(txt);
+
+          const c = pickChoice(json);
           if (!c) continue;
+
           counts[c] = (counts[c] || 0) + 1;
           total++;
         } catch (e) {
@@ -51,8 +47,6 @@ module.exports = async (req, res) => {
       .json({ pollId, total, counts, debug: { prefix, files } });
   } catch (e) {
     console.error("[vote-results] error:", e);
-    return res
-      .status(500)
-      .json({ error: "Server error", detail: String(e?.message || e) });
+    return res.status(500).json({ error: "Server error" });
   }
 };

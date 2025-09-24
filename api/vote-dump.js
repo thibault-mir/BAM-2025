@@ -1,7 +1,7 @@
 // api/vote-dump.js
 module.exports = async (req, res) => {
   try {
-    const { list, get } = await import("@vercel/blob");
+    const { list, head } = await import("@vercel/blob");
 
     const url = new URL(req.url, "http://local");
     const pollId = (url.searchParams.get("pollId") || "").trim();
@@ -9,7 +9,6 @@ module.exports = async (req, res) => {
       1,
       Math.min(50, parseInt(url.searchParams.get("limit") || "10", 10))
     );
-
     if (!pollId) return res.status(400).json({ error: "pollId required" });
 
     const prefix = `data/votes/${pollId}/`;
@@ -17,23 +16,30 @@ module.exports = async (req, res) => {
       out = [],
       count = 0;
 
-    async function streamToString(stream) {
-      const chunks = [];
-      for await (const ch of stream) chunks.push(Buffer.from(ch));
-      return Buffer.concat(chunks).toString("utf8");
-    }
-
     do {
       const resp = await list({ prefix, cursor });
       for (const b of resp.blobs) {
         if (!b.pathname.endsWith(".json")) continue;
-        const { body } = await get(b.pathname);
-        const text = await streamToString(body);
+        // Récupérer une URL lisible via head()
+        let fileText = "";
+        try {
+          const meta = await head(b.pathname);
+          const r = await fetch(meta.url); // <-- lire le contenu
+          fileText = await r.text();
+        } catch (e) {
+          out.push({ path: b.pathname, error: String(e) });
+          continue;
+        }
+
         let parsed = null;
         try {
-          parsed = JSON.parse(text);
+          parsed = JSON.parse(fileText);
         } catch {}
-        out.push({ path: b.pathname, parsed, raw: parsed ? undefined : text });
+        out.push({
+          path: b.pathname,
+          parsed,
+          raw: parsed ? undefined : fileText,
+        });
         count++;
         if (count >= limit) break;
       }
