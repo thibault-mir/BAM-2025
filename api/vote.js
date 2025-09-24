@@ -5,43 +5,46 @@ module.exports = async (req, res) => {
   try {
     const { put, head } = await import("@vercel/blob");
 
+    // CORS minimal
+    if (req.method === "OPTIONS") {
+      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      return res.status(200).end();
+    }
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
     if (req.method !== "POST")
       return res.status(405).json({ error: "Use POST" });
 
+    // parse
     let body = req.body;
-    if (typeof body === "string") body = JSON.parse(body || "{}");
-    const pollId = body.pollId?.trim();
-    const choice = body.choice?.trim();
-    const deviceId = body.deviceId?.trim();
+    if (typeof body === "string") {
+      try {
+        body = JSON.parse(body);
+      } catch {
+        body = {};
+      }
+    }
+    const pollId = (body?.pollId || "").trim();
+    const choice = (body?.choice || "").trim(); // "1".."11"
+    const deviceId = (body?.deviceId || "").trim();
 
     if (!pollId || !choice || !deviceId)
       return res
         .status(400)
         .json({ error: "pollId, choice, deviceId required" });
 
-    // === Check si déjà voté ===
+    // anti double-vote: si le marqueur existe déjà → 409
     const markerPath = `data/votes/${pollId}/devices/${deviceId}.json`;
     try {
-      // si le fichier existe déjà → déjà voté
       await head(markerPath);
       return res.status(409).json({ error: "already_voted" });
     } catch {
-      // pas trouvé → OK pour voter
+      /* pas trouvé → OK */
     }
 
-    // 1) Crée le marqueur device
-    await put(
-      markerPath,
-      JSON.stringify({ pollId, choice, at: new Date().toISOString() }),
-      {
-        access: "private",
-        contentType: "application/json",
-        addRandomSuffix: false,
-        allowOverwrite: false,
-      }
-    );
-
-    // 2) Sauvegarde le vote append-only
+    // 1) écrire l'entrée append-only
     const entry = {
       id: randomUUID(),
       pollId,
@@ -49,17 +52,29 @@ module.exports = async (req, res) => {
       deviceId,
       createdAt: new Date().toISOString(),
     };
-    const key = `data/votes/${pollId}/entries/${entry.createdAt.replace(
+    const entryKey = `data/votes/${pollId}/entries/${entry.createdAt.replace(
       /[:.]/g,
       "-"
     )}-${entry.id}.json`;
 
-    await put(key, JSON.stringify(entry, null, 2), {
-      access: "private",
+    await put(entryKey, JSON.stringify(entry, null, 2), {
+      access: "public", // <-- CHANGER ICI
       contentType: "application/json",
       addRandomSuffix: false,
       allowOverwrite: false,
     });
+
+    // 2) créer le marqueur device (empêche les prochains votes)
+    await put(
+      markerPath,
+      JSON.stringify({ pollId, choice, at: entry.createdAt }, null, 2),
+      {
+        access: "public", // <-- ET ICI AUSSI
+        contentType: "application/json",
+        addRandomSuffix: false,
+        allowOverwrite: false,
+      }
+    );
 
     return res.status(201).json({ ok: true });
   } catch (e) {
