@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     const pollId = (url.searchParams.get("pollId") || "").trim();
     if (!pollId) return res.status(400).json({ error: "pollId required" });
 
-    const prefix = `data/votes/${pollId}/`;
+    const prefix = `data/votes/${pollId}/entries/`;
     const counts = {};
     let total = 0,
       files = 0,
