@@ -3221,21 +3221,14 @@
 <!-- Weather (float, responsive & collapsible) -->
 <!-- Weather (float, mobile-compact & expandable) -->
 
-<a
+<!-- <a
   id="floatAction"
   href="#"
   class="btn btn-common btn-lg floating-btn"
 >
   VOTE NOW
-</a>
-<!-- <a
-  id="floatAction"
-  href="#"
-  target="_blank"
-  class="btn btn-common btn-lg floating-btn"
->
-  SUBMIT YOUR QUESTION
 </a> -->
+
 <div class="weather-float ww-collapsed" id="weatherBox">
   <button class="ww-toggle" id="wwToggle" aria-expanded="false" aria-controls="weatherBox" title="Afficher la météo complète">
     ▲
@@ -3255,58 +3248,6 @@
     Cannes
   </a>
 </div>
-
-<!-- MODAL MICROSOFT FORM -->
-<!-- <div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="msFormTitle">
-  <div class="ms-modal__backdrop" data-close="true"></div>
-
-  <div class="ms-modal__dialog" role="document">
-    <div class="ms-modal__body" style="padding-bottom: 0px;">
-      <button type="button" class="ms-modal__close" data-close="true">&times;</button>
-      <h2 id="msFormTitle">Submit your question</h2>
-
-      <form id="qForm" class="ms-form">
-        <input type="text" name="name" placeholder="Name (optional)">
-        <textarea name="question" placeholder="Your question..." required></textarea>
-        <button type="submit" class="btn btn-common btn-lg">Submit</button>
-      </form>
-    </div>
-  </div>
-</div> -->
-
-<!-- ... dans ton modal -->
-
-<!-- Le MODAL (wrapper complet + backdrop + dialog) -->
-<!-- <div id="msFormModal" class="ms-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="msFormTitle">
-  <div class="ms-modal__backdrop" data-close="true"></div>
-
-  <div class="ms-modal__dialog" role="document">
-    <div class="ms-modal__body">
-      <button type="button" class="ms-modal__close" data-close="true" aria-label="Fermer">&times;</button>
-      <h2 id="msFormTitle">Submit your question</h2>
-
-      
-      <div id="qLoader" class="q-loader hidden" aria-hidden="true">
-        <dotlottie-player
-          src="/assets/lottie/spongebob.lottie" 
-          background="transparent"
-          speed="1"
-          autoplay
-          loop
-          style="width:140px;height:140px">
-        </dotlottie-player>
-        <p>Envoi de ta question en cours…</p>
-      </div>
-
-      
-      <form id="qForm" class="ms-form">
-        <input type="text" name="name" placeholder="Name (optional)">
-        <textarea name="question" placeholder="Your question..." required></textarea>
-        <button type="submit" class="btn btn-common btn-lg">Submit</button>
-      </form>
-    </div>
-  </div>
-</div> -->
 
 
 
@@ -3412,9 +3353,6 @@
 </script>
 
 
-
-
-
 <script>
 // charge le script du widget météo
 !function(d,s,id){
@@ -3456,199 +3394,6 @@
 })();
 </script>
 
-<!-- <script>
-(function () {
-  // Attendre que le DOM soit prêt si le script est dans le <head>
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
-  function init() {
-    const form = document.getElementById('qForm');
-    if (!form) {
-      console.warn('[qForm] Form not found');
-      return;
-    }
-
-    const nameInput = form.querySelector('[name="name"]');
-    const qInput    = form.querySelector('[name="question"]');
-    const submitBtn = form.querySelector('[type="submit"]');
-
-    // petite zone de feedback (optionnelle)
-    let feedback = form.querySelector('.q-feedback');
-    if (!feedback) {
-      feedback = document.createElement('div');
-      feedback.className = 'q-feedback';
-      feedback.style.marginTop = '8px';
-      feedback.style.fontSize = '0.95rem';
-      form.appendChild(feedback);
-    }
-
-    form.addEventListener('submit', onSubmit);
-
-    async function onSubmit(e) {
-      e.preventDefault();
-
-      const name = (nameInput?.value || '').trim();
-      const question = (qInput?.value || '').trim();
-
-      // validation minimale côté client
-      if (!question) {
-        showMsg('🛑 Merci d’entrer une question.', true);
-        qInput?.focus();
-        return;
-      }
-
-      // empêcher double clic
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.dataset._oldText = submitBtn.textContent;
-        submitBtn.textContent = 'Envoi...';
-      }
-      showMsg('⏳ Envoi en cours...', false);
-
-      try {
-        const payload = { name, question };
-
-        // IMPORTANT: chemin absolu vers l’API (racine du domaine)
-        const res = await fetch('/api/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        const raw = await res.text();
-        let data = {};
-        try { data = JSON.parse(raw); } catch { data = { error: raw }; }
-
-        if (!res.ok) {
-          throw new Error(data.error || raw || ('HTTP ' + res.status));
-        }
-
-        // succès
-        showMsg('✅ Merci ! Votre question a bien été enregistrée.', false);
-        // reset champ question uniquement (garde le nom si tu veux)
-        if (qInput) qInput.value = '';
-        // si tu veux tout reset : form.reset();
-
-        // Optional : log/diagnostic
-        console.log('submit response:', data);
-
-      } catch (err) {
-        console.error('submit failed:', err);
-        showMsg('❌ Erreur lors de l’envoi : ' + (err.message || 'inconnue'), true);
-      } finally {
-        // réactiver le bouton
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = submitBtn.dataset._oldText || 'Envoyer';
-        }
-      }
-    }
-
-    function showMsg(msg, isError) {
-      if (!feedback) return;
-      feedback.textContent = msg;
-      feedback.style.color = isError ? '#d32f2f' : '#2e7d32';
-      feedback.style.opacity = '1';
-    }
-  }
-})();
-</script>
- -->
-
-<!-- <script>
-(function () {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
-  function init(){
-    const form = document.getElementById('qForm');
-    const nameInput = form?.querySelector('[name="name"]');
-    const qInput    = form?.querySelector('[name="question"]');
-    const submitBtn = form?.querySelector('[type="submit"]');
-    const loader    = document.getElementById('qLoader');
-
-    if (!form) return;
-
-    form.addEventListener('submit', onSubmit);
-
-    function showLoader(){
-      if (!loader) return;
-      loader.classList.remove('hidden');
-      loader.setAttribute('aria-hidden','false');
-      form.setAttribute('aria-busy','true');
-      // bloquer les champs
-      form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
-    }
-    function hideLoader(){
-      if (!loader) return;
-      loader.classList.add('hidden');
-      loader.setAttribute('aria-hidden','true');
-      form.removeAttribute('aria-busy');
-      // réactiver les champs
-      form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = false);
-    }
-    const delay = (ms)=> new Promise(r=>setTimeout(r, ms));
-
-    async function onSubmit(e){
-      e.preventDefault();
-
-      const name = (nameInput?.value || '').trim();
-      const question = (qInput?.value || '').trim();
-      if (!question) {
-        alert('🛑 Merci d’entrer une question.');
-        qInput?.focus();
-        return;
-      }
-
-      showLoader(); // <— affiche l’overlay
-
-      try {
-        const payload = { name, question };
-
-        // On garantit 3s minimum d’affichage pour l’overlay
-        const minShow = delay(3000);
-
-        const res = await fetch('/api/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        const raw = await res.text();
-        let data = {};
-        try { data = JSON.parse(raw); } catch { data = { error: raw }; }
-
-        // attend la fin du délai mini
-        await minShow;
-
-        if (!res.ok) throw new Error(data.error || raw || ('HTTP ' + res.status));
-
-        // succès
-        // (tu peux aussi mettre un toast ou un message dans l’overlay si tu veux)
-        hideLoader();
-        alert('✅ Merci ! Votre question a bien été enregistrée.');
-        // reset champ question uniquement (garde le nom si tu veux)
-        if (qInput) qInput.value = '';
-
-        console.log('submit response:', data);
-
-      } catch (err) {
-        console.error('submit failed:', err);
-        await delay(300); // petite pause pour éviter un flash
-        hideLoader();
-        alert('❌ Erreur lors de l’envoi : ' + (err.message || 'inconnue'));
-      }
-    }
-  }
-})();
-</script> -->
 
 <script>
 (function () {
@@ -3751,8 +3496,6 @@
   }
 })();
 </script>
-
-
 
 <script>
 (function(){

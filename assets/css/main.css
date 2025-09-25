@@ -2414,8 +2414,8 @@ a.back-to-top:focus {
 .weather-float {
   position: fixed;
   right: max(var(--ww-gap), env(safe-area-inset-right));
-  /* bottom: calc(var(--ww-gap) + env(safe-area-inset-bottom)); */
-  bottom: calc(var(--btn-bottom) + var(--btn-h) + var(--gap));
+  bottom: calc(var(--ww-gap) + env(safe-area-inset-bottom));
+  /* bottom: calc(var(--btn-bottom) + var(--btn-h) + var(--gap)); */
   z-index: var(--ww-z);
   overflow: hidden;
   border-radius: 12px;
